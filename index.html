@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serigraph Online - Serigrafía & 3D</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Header / Hero Banner -->
+    <header class="hero-banner">
+        <div class="brand">
+            <h1>SERIGRAPH ONLINE</h1>
+            <p class="subtitle">Impresión en Serigrafía y Diseños 3D a Medida</p>
+        </div>
+        <p class="hero-text">Cotiza tu pedido personalizado y recíbelo hasta tu puerta.</p>
+        <button class="btn-whatsapp" onclick="enviarWhatsAppGeneral()">Pedir por WhatsApp</button>
+    </header>
+
+    <!-- Catálogo de Productos -->
+    <main class="catalog-container">
+        <h2 class="section-title">Catálogo Destacado</h2>
+        <div class="products-grid">
+            
+            <!-- Producto 1 -->
+            <article class="product-card">
+                <div class="img-placeholder">👕</div>
+                <div class="product-info">
+                    <h3>Playera Personalizada Serigrafía</h3>
+                    <p class="price">$199 MXN</p>
+                    <button class="btn-cotizar" onclick="cotizarProducto('Playera Serigrafía', 199)">Cotizar</button>
+                </div>
+            </article>
+
+            <!-- Producto 2 -->
+            <article class="product-card">
+                <div class="img-placeholder">🧊</div>
+                <div class="product-info">
+                    <h3>Impresión 3D a Medida</h3>
+                    <p class="price">$249 MXN</p>
+                    <button class="btn-cotizar" onclick="cotizarProducto('Figura 3D a Medida', 249)">Cotizar</button>
+                </div>
+            </article>
+
+            <!-- Producto 3 -->
+            <article class="product-card">
+                <div class="img-placeholder">🎁</div>
+                <div class="product-info">
+                    <h3>Paquete Promocional (Serigrafía + 3D)</h3>
+                    <p class="price">$369 MXN</p>
+                    <button class="btn-cotizar" onclick="cotizarProducto('Paquete Promocional', 369)">Cotizar</button>
+                </div>
+            </article>
+
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
