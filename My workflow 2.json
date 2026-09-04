@@ -1,0 +1,42 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "solicitud-muestra-serigraph",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4c21728a-aba0-4993-bdce-ff9977ec3e19",
+      "name": "Webhook",
+      "webhookId": "df27fab1-9dd3-427d-b6ae-867dcf1144cd"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ccf73cd6-83cd-4acb-ba5d-8e5b4d122132",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "139bc7e663d8ccfb4ec33e5b327056dbbab5a8d550e98ebfcd52685ab3a27328"
+  },
+  "nodeGroups": [],
+  "id": "eEGQbkHbI7jCMq72",
+  "tags": []
+}

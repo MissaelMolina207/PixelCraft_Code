@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Serigraph Online - Serigrafía</title>
+    <title>Serigraph Online - Serigrafía e Impresión 3D</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,44 +20,99 @@
         <p class="hero-text">Cotiza tu pedido personalizado y recíbelo hasta tu puerta.</p>
         <button class="btn-whatsapp" onclick="enviarWhatsAppGeneral()">Pedir por WhatsApp</button>
     </header>
+<!-- Módulo Generador con IA -->
+<section style="background: #252525; border: 1px solid #00ff88; padding: 20px; border-radius: 12px; margin: 20px auto; max-width: 800px; text-align: center;">
+    <h2 style="color: #00ff88; margin-top: 0;">🎨 Diseña tu Muestra con Inteligencia Artificial</h2>
+    <p style="color: #ccc; font-size: 14px;">Escribe lo que quieres imprimir y la IA creará el arte en segundos.</p>
+    
+    <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;">
+        <input type="text" id="promptIA" placeholder="Ej. Sol naciente estilo bohemio minimalista, arte vectorial" style="width: 70%; padding: 12px; border-radius: 6px; border: none; background: #333; color: #fff;">
+        <button id="btnGenerarIA" onclick="generarDisenoIA()" style="padding: 12px 20px; background: #00ff88; color: #000; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">Generar Arte ✨</button>
+    </div>
 
+    <!-- Vista previa de la prenda/producto renderizado -->
+    <div style="position: relative; width: 250px; height: 250px; margin: 0 auto; background: #111; border-radius: 8px; border: 1px dashed #555; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+        <img id="previewRender" src="https://miservidor.com/mockups/funda-sol-default.png" alt="Vista Previa" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+    </div>
+
+    <button onclick="abrirModalMuestra(imagenDisenoActual)" style="margin-top: 15px; background: transparent; color: #00ff88; border: 1px solid #00ff88; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold;">
+        📦 Pedir Muestra Física de este Diseño
+    </button>
+</section>
     <!-- Catálogo de Productos -->
     <main class="catalog-container">
         <h2 class="section-title">Catálogo Destacado</h2>
         <div class="products-grid">
             
-            <!-- Producto 1 -->
+            <!-- Producto 1: Playera Serigrafía -->
             <article class="product-card">
                 <div class="img-placeholder">👕</div>
                 <div class="product-info">
                     <h3>Playera Personalizada Serigrafía</h3>
                     <p class="price">$199 MXN</p>
-                    <button class="btn-cotizar" onclick="cotizarProducto('Playera Serigrafía', 199)">Cotizar</button>
+                    <button class="btn-cotizar" onclick="cotizarProducto('Playera Serigrafía', 199)">Cotizar por WhatsApp</button>
+                    <button class="btn-muestra" onclick="abrirModalMuestra('https://miservidor.com/mockups/playera-muestra.png')" style="margin-top: 6px; background: #333; color: #00ff88; border: 1px solid #00ff88; padding: 8px; border-radius: 6px; cursor: pointer; width: 100%;">📦 Pedir Muestra Física</button>
                 </div>
             </article>
 
-            <!-- Producto 2 -->
+            <!-- Producto 2: Impresión 3D -->
             <article class="product-card">
                 <div class="img-placeholder">🧊</div>
                 <div class="product-info">
                     <h3>Impresión 3D a Medida</h3>
                     <p class="price">$249 MXN</p>
-                    <button class="btn-cotizar" onclick="cotizarProducto('Figura 3D a Medida', 249)">Cotizar</button>
+                    <button class="btn-cotizar" onclick="cotizarProducto('Figura 3D a Medida', 249)">Cotizar por WhatsApp</button>
+                    <button class="btn-muestra" onclick="abrirModalMuestra('https://miservidor.com/mockups/funda-sol-default.png')" style="margin-top: 6px; background: #333; color: #00ff88; border: 1px solid #00ff88; padding: 8px; border-radius: 6px; cursor: pointer; width: 100%;">📦 Pedir Muestra Física</button>
                 </div>
             </article>
 
-            <!-- Producto 3 -->
+            <!-- Producto 3: Paquete Promocional -->
             <article class="product-card">
                 <div class="img-placeholder">🎁</div>
                 <div class="product-info">
                     <h3>Paquete Promocional (Serigrafía + 3D)</h3>
                     <p class="price">$369 MXN</p>
-                    <button class="btn-cotizar" onclick="cotizarProducto('Paquete Promocional', 369)">Cotizar</button>
+                    <button class="btn-cotizar" onclick="cotizarProducto('Paquete Promocional', 369)">Cotizar por WhatsApp</button>
+                    <button class="btn-muestra" onclick="abrirModalMuestra('https://miservidor.com/mockups/paquete-muestra.png')" style="margin-top: 6px; background: #333; color: #00ff88; border: 1px solid #00ff88; padding: 8px; border-radius: 6px; cursor: pointer; width: 100%;">📦 Pedir Muestra Física</button>
                 </div>
             </article>
 
         </div>
     </main>
+
+    <!-- Modal / Formulario para Pedir Muestra Física -->
+    <div id="modalMuestra" class="modal-contenedor" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
+        <div style="background: #1e1e1e; color: #fff; padding: 25px; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+            <h2 style="margin-top:0; color: #00ff88;">📦 Solicitar Muestra Física</h2>
+            <p style="font-size: 14px; color: #ccc;">Ingresa tus datos para enviarte la muestra personalizada a la puerta de tu casa.</p>
+            
+            <form id="formMuestra">
+                <input type="text" id="nombreCliente" placeholder="Nombre completo" required style="width:100%; padding:10px; margin: 6px 0; border-radius:6px; border:none;">
+                <input type="tel" id="telefonoWhatsApp" placeholder="WhatsApp (10 dígitos)" required style="width:100%; padding:10px; margin: 6px 0; border-radius:6px; border:none;">
+                <input type="email" id="correoElectronico" placeholder="Correo electrónico" required style="width:100%; padding:10px; margin: 6px 0; border-radius:6px; border:none;">
+                
+                <h4 style="margin: 10px 0 5px 0; color: #00ff88;">Dirección de Envío</h4>
+                <input type="text" id="calleNumero" placeholder="Calle y número exterior/interior" required style="width:100%; padding:10px; margin: 4px 0; border-radius:6px; border:none;">
+                <input type="text" id="colonia" placeholder="Colonia / Fraccionamiento" required style="width:100%; padding:10px; margin: 4px 0; border-radius:6px; border:none;">
+                <div style="display:flex; gap:8px;">
+                    <input type="text" id="codigoPostal" placeholder="C.P." required style="width:40%; padding:10px; margin: 4px 0; border-radius:6px; border:none;">
+                    <input type="text" id="ciudadEstado" placeholder="Ciudad y Estado" required style="width:60%; padding:10px; margin: 4px 0; border-radius:6px; border:none;">
+                </div>
+
+                <!-- Selección del Tipo de Solicitud -->
+                <label style="display:block; margin-top:12px; font-weight:bold;">¿Qué deseas hacer?</label>
+                <select id="tipoSolicitud" style="width:100%; padding:10px; margin: 6px 0; border-radius:6px; border:none; background:#333; color:#fff;">
+                    <option value="Muestra_1_pieza">Probar con 1 Muestra Física antes de pedir volumen</option>
+                    <option value="Cotizacion_100_piezas">Quiero cotizar directo 100+ piezas</option>
+                </select>
+
+                <div style="display:flex; justify-content: space-between; margin-top: 18px;">
+                    <button type="button" onclick="cerrarModalMuestra()" style="padding: 10px 20px; background: #555; color: white; border: none; border-radius: 6px; cursor: pointer;">Cancelar</button>
+                    <button type="submit" style="padding: 10px 20px; background: #00ff88; color: #000; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">Enviar Solicitud 🚀</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
