@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixelcraft | Serigraph Online & IA Custom Studio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- 1. HERO - IMPACTO Y POSICIONAMIENTO -->
+    <header class="hero-banner">
+        <div class="brand">
+            <h1>PIXEL<span>CRAFT</span> <small>SERIGRAPH ONLINE</small></h1>
+            <p class="subtitle">Ingeniería de Impresión, Serigrafía & Polímeros 3D a la Medida</p>
+        </div>
+        <p class="hero-text">Deja de adivinar cómo se verá tu marca. Diseña tu prototipo con IA en segundos, pide tu muestra física a la puerta de tu casa y escala a volumen masivo sin intermediarios.</p>
+        <button class="btn-whatsapp" onclick="enviarWhatsAppGeneral()">Atención Directa vía WhatsApp ⚡</button>
+    </header>
+
+    <!-- 2. SHOWREEL / GENERADOR DE ARTE CON IA (Dopamina Visual) -->
+    <section class="ai-generator-box" id="showreel">
+        <h2>🎨 Showreel Interactivo: Diseña con IA</h2>
+        <p>Escribe tu concepto. La inteligencia artificial proyecta el resultado final sobre tu producto en tiempo real.</p>
+        
+        <div class="ai-input-group">
+            <input type="text" id="promptIA" placeholder="Ej. Cyberpunk tiger vector, minimalista, alta definición">
+            <button id="btnGenerarIA" onclick="generarDisenoIA()">Generar Arte ✨</button>
+        </div>
+
+        <div class="preview-container">
+            <img id="previewRender" src="https://miservidor.com/mockups/funda-sol-default.png" alt="Render del Producto">
+        </div>
+
+        <button class="btn-sample-trigger" onclick="abrirModalMuestra(imagenDisenoActual)">
+            📦 Pedir Muestra Física de este Diseño
+        </button>
+    </section>
+
+    <!-- 3. SERVICIOS -->
+    <section class="services-section">
+        <h2 class="section-title">Nuestros Servicios de Alta Precisión</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3>👕 Serigrafía Textil</h3>
+                <p>Tintas de alta durabilidad sobre algodón pesado y sintéticos. Curado perfecto para que no se desaforre.</p>
+            </div>
+            <div class="service-card">
+                <h3>🧊 Impresión 3D Industrial</h3>
+                <p>Prototipado rápido y piezas funcionales en polímeros avanzados (PETG, ABS, PLA reforzado).</p>
+            </div>
+            <div class="service-card">
+                <h3>⚡ Merch Híbrida</h3>
+                <p>Combinación letal: Empaca tus piezas impresas con accesorios personalizados en 3D.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. SELECCIÓN DE TRABAJOS (Catálogo) -->
+    <main class="catalog-container">
+        <h2 class="section-title">Selección de Trabajos</h2>
+        <div class="products-grid">
+            <article class="product-card">
+                <div class="img-placeholder">👕</div>
+                <div class="product-info">
+                    <h3>Playera Personalizada Serigrafía</h3>
+                    <p class="price">$199 MXN</p>
+                    <button class="btn-cotizar" onclick="cotizarProducto('Playera Serigrafía', 199)">Cotizar por WhatsApp</button>
+                    <button class="btn-muestra" onclick="abrirModalMuestra('https://miservidor.com/mockups/playera-muestra.png')">📦 Pedir Muestra Física</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="img-placeholder">🧊</div>
+                <div class="product-info">
+                    <h3>Impresión 3D a Medida</h3>
+                    <p class="price">$249 MXN</p>
+                    <button class="btn-cotizar" onclick="cotizarProducto('Figura 3D a Medida', 249)">Cotizar por WhatsApp</button>
+                    <button class="btn-muestra" onclick="abrirModalMuestra('https://miservidor.com/mockups/funda-sol-default.png')">📦 Pedir Muestra Física</button>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="img-placeholder">🎁</div>
+                <div class="product-info">
+                    <h3>Paquete Promocional (Serigrafía + 3D)</h3>
+                    <p class="price">$369 MXN</p>
+                    <button class="btn-cotizar" onclick="cotizarProducto('Paquete Promocional', 369)">Cotizar por WhatsApp</button>
+                    <button class="btn-muestra" onclick="abrirModalMuestra('https://miservidor.com/mockups/paquete-muestra.png')">📦 Pedir Muestra Física</button>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <!-- 5. POR QUÉ STUDIO RED / PIXELCRAFT -->
+    <section class="why-us">
+        <h2>¿Por qué Studio Red?</h2>
+        <div class="why-grid">
+            <div class="why-card">
+                <h3>⚡ Cero Fricción</h3>
+                <p>Del diseño por IA al embudo de WhatsApp en un solo clic. Sin formularios estúpidos de tres páginas.</p>
+            </div>
+            <div class="why-card">
+                <h3>🔬 Control Quirúrgico</h3>
+                <p>Materiales probados en campo y automatizaciones robustas con n8n para que ningún pedido se pierda en el limbo.</p>
+            </div>
+            <div class="why-card">
+                <h3>📦 Garantía de Muestra</h3>
+                <p>No te pedimos fe ciega. Comprueba la calidad con 1 pieza antes de quemar tu presupuesto en volumen[cite: 1].</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. CTA + FORMULARIO (Modal de Captura) -->
+    <div id="modalMuestra" class="modal-contenedor">
+        <div class="modal-box">
+            <h2>📦 Solicitar Muestra / Pipeline de Venta</h2>
+            <p>Ingresa tus datos para registrar el envío y conectar directo con nuestro sistema de producción.</p>
+            
+            <form id="formMuestra">
+                <input type="text" id="nombreCliente" placeholder="Nombre completo o Empresa" required>
+                <input type="tel" id="telefonoWhatsApp" placeholder="WhatsApp (10 dígitos)" required>
+                <input type="email" id="correoElectronico" placeholder="Correo electrónico" required>
+                
+                <h4 style="margin: 12px 0 4px 0; color: var(--red-hot); font-size: 0.9rem;">Dirección de Envío</h4>
+                <input type="text" id="calleNumero" placeholder="Calle y número exterior/interior" required>
+                <input type="text" id="colonia" placeholder="Colonia / Fraccionamiento" required>
+                <div style="display:flex; gap:8px;">
+                    <input type="text" id="codigoPostal" placeholder="C.P." required style="width:40%;">
+                    <input type="text" id="ciudadEstado" placeholder="Ciudad y Estado" required style="width:60%;">
+                </div>
+
+                <label style="display:block; margin-top:12px; font-weight:600; font-size:0.85rem;">Tipo de Requerimiento:</label>
+                <select id="tipoSolicitud">
+                    <option value="Muestra_1_pieza">Probar con 1 Muestra Física</option>
+                    <option value="Cotizacion_Volumen">Cotizar Lote / Producción Masiva</option>
+                </select>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="cerrarModalMuestra()">Cancelar</button>
+                    <button type="submit" class="btn-submit-modal">Enviar al Servidor 🚀</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

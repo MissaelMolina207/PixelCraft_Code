@@ -1,119 +1,290 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Serigraph Online - Serigrafía e Impresión 3D</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>PixelCraft — El Laboratorio de la Casa</title>
+    <meta name="description" content="Impresión 3D, serigrafía y letreros en volumen. Diseña con IA, ve el mockup y cotiza en minutos.">
+    <link rel="stylesheet" href="css/tokens.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
-
-    <!-- Header / Hero Banner -->
-    <header class="hero-banner">
-        <div class="brand">
-            <h1>SERIGRAPH ONLINE</h1>
-            <p class="subtitle">Impresión en Serigrafía y Diseños 3D a Medida</p>
+    <header>
+        <div class="wrap">
+            <a class="logo" href="#top">PIXEL
+                <b>CRAFT</b>
+            </a>
+            <nav>
+                <a href="#catalogo">Catálogo</a>
+                <a href="#estudio">Estudio IA</a>
+                <a href="#proceso">Proceso</a>
+                <a href="#contacto">Contacto</a>
+            </nav>
+            <input id="q" class="search" type="search" placeholder="Buscar: llavero, playera, letrero…" aria-label="Buscar productos">
+            <select id="loc" aria-label="Ubicación de entrega">
+                <option>Envío a todo México</option>
+                <option>Recoger en taller</option>
+                <option>Internacional</option>
+            </select>
+            <button class="btn" id="cartBtn" aria-label="Abrir carrito">🛒 <span id="count">0</span></button>
         </div>
-        <p class="hero-text">Cotiza tu pedido personalizado y recíbelo hasta tu puerta.</p>
-        <button class="btn-whatsapp" onclick="enviarWhatsAppGeneral()">Pedir por WhatsApp</button>
     </header>
-<!-- Módulo Generador con IA -->
-<section style="background: #252525; border: 1px solid #00ff88; padding: 20px; border-radius: 12px; margin: 20px auto; max-width: 800px; text-align: center;">
-    <h2 style="color: #00ff88; margin-top: 0;">🎨 Diseña tu Muestra con Inteligencia Artificial</h2>
-    <p style="color: #ccc; font-size: 14px;">Escribe lo que quieres imprimir y la IA creará el arte en segundos.</p>
     
-    <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;">
-        <input type="text" id="promptIA" placeholder="Ej. Sol naciente estilo bohemio minimalista, arte vectorial" style="width: 70%; padding: 12px; border-radius: 6px; border: none; background: #333; color: #fff;">
-        <button id="btnGenerarIA" onclick="generarDisenoIA()" style="padding: 12px 20px; background: #00ff88; color: #000; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">Generar Arte ✨</button>
-    </div>
+    <main id="top">
+        <!-- SECCIÓN DE BANNER PANORÁMICO ESTILO MERCADO LIBRE -->
+        <section class="ml-hero-section">
+            <div class="ml-carousel-container" id="mlHeroCarousel">
+                <div class="ml-carousel-track" id="mlTrack">
+                    <!-- Slide 1 -->
+                    <div class="ml-slide slide-0">
+                        <div class="ml-slide-inner">
+                            <div class="ml-slide-content">
+                            <h1>De tu idea a pieza física. Sin el “ya casi está”.</h1>
+                                <p style="color:var(--soft); font-size: 1.15rem; margin: 20px 0 26px;">Prototipos 3D, serigrafía y letreros en volumen para marcas, agencias y artistas. Diseña con IA, ve el mockup y cotiza en minutos.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Slide 1 -->
+                    <div class="ml-slide slide-1">
+                        <div class="ml-slide-inner">
+                            <div class="ml-slide-content">
+                                <span class="ml-slide-badge">Tecnología 3D</span>
+                                <h2>Prototipos industriales sin margen de error</h2>
+                                <p>Piezas físicas reales con tolerancias exactas y acabados de nivel técnico.</p>
+                                <a href="#estudio" class="ml-btn-action">Probar en Estudio IA</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Slide 2 -->
+                    <div class="ml-slide slide-2">
+                        <div class="ml-slide-inner">
+                            <div class="ml-slide-content">
+                                <span class="ml-slide-badge">Textil & Promocionales</span>
+                                <h2>Serigrafía de alta definición</h2>
+                                <p>Playeras y textiles con tintas de máxima durabilidad desde 1 pieza.</p>
+                                <a href="#catalogo" class="ml-btn-action">Ver Catálogo</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Slide 3 -->
+                    <div class="ml-slide slide-3">
+                        <div class="ml-slide-inner">
+                            <div class="ml-slide-content">
+                                <span class="ml-slide-badge">Identidad Visual</span>
+                                <h2>Letreros corpóreos en volumen</h2>
+                                <p>Rótulos de alto impacto con iluminación para negocios y marcas.</p>
+                                <a href="#contacto" class="ml-btn-action">Cotizar Proyecto</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Slide 4 -->
+                    <div class="ml-slide slide-4">
+                        <div class="ml-slide-inner">
+                            <div class="ml-slide-content">
+                                <span class="ml-slide-badge">Diseño con IA</span>
+                                <h2>Mockup de tu idea antes de producir</h2>
+                                <p>Genera un diseño con inteligencia artificial y visualízalo sobre el producto.</p>
+                                <a href="#estudio" class="ml-btn-action">Probar Estudio IA</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    <!-- Vista previa de la prenda/producto renderizado -->
-    <div style="position: relative; width: 250px; height: 250px; margin: 0 auto; background: #111; border-radius: 8px; border: 1px dashed #555; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-        <img id="previewRender" src="https://miservidor.com/mockups/funda-sol-default.png" alt="Vista Previa" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-    </div>
+                <!-- Botones de navegación (Flechas circulares flotantes) -->
+                <button class="ml-carousel-btn ml-prev" id="mlPrev" aria-label="Anterior">
+                    <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+                <button class="ml-carousel-btn ml-next" id="mlNext" aria-label="Siguiente">
+                    <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </button>
 
-    <button onclick="abrirModalMuestra(imagenDisenoActual)" style="margin-top: 15px; background: transparent; color: #00ff88; border: 1px solid #00ff88; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold;">
-        📦 Pedir Muestra Física de este Diseño
-    </button>
+                <!-- Indicadores de Puntos -->
+                <div class="ml-dots" id="mlDots">
+                    <button class="ml-dot active" data-index="0" aria-label="Slide 1"></button>
+                    <button class="ml-dot" data-index="1" aria-label="Slide 2"></button>
+                    <button class="ml-dot" data-index="2" aria-label="Slide 3"></button>
+                    <button class="ml-dot" data-index="3" aria-label="Slide 4"></button>
+                    <button class="ml-dot" data-index="4" aria-label="Slide 5"></button>    
+                </div>
+            </div>
+        </section>
+
+        <!-- Bloque informativo inferior integrado -->
+        <section style="padding-top: 10px;">
+            <div class="wrap">
+                <div class="row">
+                    <a class="btn red pulse" href="#contacto">Cotizar mi proyecto</a>
+                    <a class="btn" href="#estudio">Diseñar con IA</a>
+                </div>
+                <div class="row trust" style="margin-top: 26px; gap: 8px 20px; color: var(--soft); font-size: 0.85rem;">
+                    <span>Pago cifrado con Stripe</span>
+                    <span>Revisión de archivo gratis</span>
+                    <span>Muestra desde 1 pieza</span>
+                </div>
+                <div class="slots" style="margin-top: 22px; max-width: 360px; font-size: 0.88rem; color: var(--soft);">
+                    Cupos de producción esta semana: <b class="mono" id="slotsTxt"></b>
+                    <div class="bar" style="height: 6px; border-radius: 9px; background: var(--line); margin-top: 8px; overflow: hidden;">
+                        <i id="slotsBar" style="display: block; height: 100%; background: var(--red-hot);"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+<!-- CATÁLOGO ESTILO MERCADO LIBRE -->
+<section id="catalogo">
+    <div class="wrap">
+
+        <!-- 1. BARRA SUPERIOR DE CATEGORÍAS (Texto deslizable) -->
+        <div class="chips-carousel-wrapper">
+            <button class="cat-nav-btn chips-prev" id="chipsPrev" aria-label="Anterior">‹</button>
+            <div class="chips ml-chips" id="chips"></div>
+            <button class="cat-nav-btn chips-next" id="chipsNext" aria-label="Siguiente">›</button>
+        </div>
+
+        <!-- 2. ATAJOS / SUBCATEGORÍAS CON ICONOS (Estilo accesos rápidos ML) -->
+        <div class="subchips-carousel-wrapper" id="subchipsWrapper">
+            <button class="cat-nav-btn subchips-prev" id="subchipsPrev" aria-label="Anterior">‹</button>
+            <div class="ml-shortcuts" id="subchips"></div>
+            <button class="cat-nav-btn subchips-next" id="subchipsNext" aria-label="Siguiente">›</button>
+        </div>
+
+        <!-- 3. CARRUSEL HORIZONTAL DE PRODUCTOS -->
+        <div class="ecommerce-carousel-wrapper">
+            <button class="cat-nav-btn cat-prev" id="catPrev" aria-label="Anterior">‹</button>
+            <div class="ecommerce-grid" id="grid"></div>
+            <button class="cat-nav-btn cat-next" id="catNext" aria-label="Siguiente">›</button>
+        </div>
+
+        <p class="note" style="margin-top:16px">Precios de muestra en MXN. En volumen el costo por pieza baja: cotiza.</p>
+    </div>
 </section>
-    <!-- Catálogo de Productos -->
-    <main class="catalog-container">
-        <h2 class="section-title">Catálogo Destacado</h2>
-        <div class="products-grid">
-            
-            <!-- Producto 1: Playera Serigrafía -->
-            <article class="product-card">
-                <div class="img-placeholder">👕</div>
-                <div class="product-info">
-                    <h3>Playera Personalizada Serigrafía</h3>
-                    <p class="price">$199 MXN</p>
-                    <button class="btn-cotizar" onclick="cotizarProducto('Playera Serigrafía', 199)">Cotizar por WhatsApp</button>
-                    <button class="btn-muestra" onclick="abrirModalMuestra('https://miservidor.com/mockups/playera-muestra.png')" style="margin-top: 6px; background: #333; color: #00ff88; border: 1px solid #00ff88; padding: 8px; border-radius: 6px; cursor: pointer; width: 100%;">📦 Pedir Muestra Física</button>
-                </div>
-            </article>
 
-            <!-- Producto 2: Impresión 3D -->
-            <article class="product-card">
-                <div class="img-placeholder">🧊</div>
-                <div class="product-info">
-                    <h3>Impresión 3D a Medida</h3>
-                    <p class="price">$249 MXN</p>
-                    <button class="btn-cotizar" onclick="cotizarProducto('Figura 3D a Medida', 249)">Cotizar por WhatsApp</button>
-                    <button class="btn-muestra" onclick="abrirModalMuestra('https://miservidor.com/mockups/funda-sol-default.png')" style="margin-top: 6px; background: #333; color: #00ff88; border: 1px solid #00ff88; padding: 8px; border-radius: 6px; cursor: pointer; width: 100%;">📦 Pedir Muestra Física</button>
+        <section id="estudio">
+            <div class="wrap">
+                <h2>Describe tu idea. Míralo puesto en el producto.</h2>
+                <div class="studio">
+                    <div>
+                        <div class="tabs" id="mode">
+                            <button class="chip" data-m="a" aria-pressed="true">A: texto a imagen</button>
+                            <button class="chip" data-m="b" aria-pressed="false">B: fusión de referencias</button>
+                        </div>
+                        <div class="tabs" id="prod">
+                            <button class="chip" data-p="shirt" aria-pressed="true">Playera</button>
+                            <button class="chip" data-p="plate" aria-pressed="false">Placa o letrero</button>
+                        </div>
+                        <div id="pa">
+                            <textarea id="prompt" rows="4" placeholder="Ej: calavera mecánica con engranes y tipografía industrial, rojo y blanco"></textarea>
+                            <button class="btn red" id="gen" style="margin-top:12px">Generar diseño</button>
+                        </div>
+                        <div id="pb" hidden>
+                            <label class="drop" id="drop">Arrastra 2 o más imágenes, o toca para elegirlas<input id="files" type="file" accept="image/*" multiple hidden></label>
+                            <div class="refs" id="refs"></div>
+                            <label class="note">Intensidad de mezcla<input id="mix" type="range" min="10" max="90" value="50"></label>
+                            <button class="btn red" id="fuse" style="margin-top:12px">Fusionar imágenes</button>
+                        </div>
+                        <p class="note">Vista previa: el motor local simula la IA. En producción llama a <code>/api/generate</code> (Replicate).</p>
+                    </div>
+                    <div>
+                        <canvas id="cv" width="480" height="480"></canvas>
+                        <div class="row" style="margin-top:12px">
+                            <button class="btn red off" id="buy">Comprar muestra directa</button>
+                            <a class="btn off" id="wa" target="_blank" rel="noopener">Cotizar idea por WhatsApp</a>
+                        </div>
+                    </div>
                 </div>
-            </article>
-
-            <!-- Producto 3: Paquete Promocional -->
-            <article class="product-card">
-                <div class="img-placeholder">🎁</div>
-                <div class="product-info">
-                    <h3>Paquete Promocional (Serigrafía + 3D)</h3>
-                    <p class="price">$369 MXN</p>
-                    <button class="btn-cotizar" onclick="cotizarProducto('Paquete Promocional', 369)">Cotizar por WhatsApp</button>
-                    <button class="btn-muestra" onclick="abrirModalMuestra('https://miservidor.com/mockups/paquete-muestra.png')" style="margin-top: 6px; background: #333; color: #00ff88; border: 1px solid #00ff88; padding: 8px; border-radius: 6px; cursor: pointer; width: 100%;">📦 Pedir Muestra Física</button>
+            </div>
+        </section>
+                <section>
+            <div class="wrap">
+                <h2>Taller de verdad. Interfaz de este siglo.</h2>
+                <div class="grid g3">
+                    <div class="card">
+                        <h3>Tolerancias, no “a ojo”</h3>
+                        <p>Revisamos tu archivo y calibramos por material antes de producir. Si no se puede fabricar, te lo decimos el mismo día.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Mockup antes de pagar</h3>
+                        <p>El Estudio IA proyecta tu idea sobre el producto. Aprobar con los ojos cuesta menos que corregir con el bolsillo.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Cupos reales</h3>
+                        <p>Producimos por capacidad semanal. El número de arriba es el real, no un contador con trauma.</p>
+                    </div>
                 </div>
-            </article>
+            </div>
+        </section>
+        <section id="proceso">
+            <div class="wrap">
+                <h2>Cuatro pasos. Cero misterios.</h2>
+                <div class="grid g4">
+                    <div class="card step">
+                        <b>01</b>
+                        <h3>Brief</h3>
+                        <p>Nos cuentas qué quieres y en qué cantidad.</p>
+                    </div>
+                    <div class="card step">
+                        <b>02</b>
+                        <h3>Mockup IA</h3>
+                        <p>Ves el producto antes de producir.</p>
+                    </div>
+                    <div class="card step">
+                        <b>03</b>
+                        <h3>Muestra</h3>
+                        <p>Pieza física de prueba. Ajustamos lo necesario.</p>
+                    </div>
+                    <div class="card step">
+                        <b>04</b>
+                        <h3>Producción</h3>
+                        <p>Tirada, control de calidad y envío.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        </div>
+        <section id="contacto">
+            <div class="wrap">
+                <h2>Cuéntanos el proyecto. Respondemos hoy.</h2>
+                <p style="color:var(--soft);margin:-8px 0 22px">Sin compromiso. Si no es viable, te lo decimos y te ahorras tiempo.</p>
+                <form id="lead">
+                    <div class="two">
+                        <input name="nombre" placeholder="Nombre" required autocomplete="name">
+                        <input name="contacto" placeholder="WhatsApp o email" required autocomplete="tel">
+                    </div>
+                    <select name="tipo" aria-label="Tipo de cliente">
+                        <option>Marca</option>
+                        <option>Empresa</option>
+                        <option>Agencia</option>
+                        <option>Artista</option>
+                    </select>
+                    <textarea name="proyecto" rows="4" placeholder="Qué quieres fabricar, cantidad aproximada y fecha límite" required></textarea>
+                    <input class="hp" name="web" tabindex="-1" autocomplete="off" aria-hidden="true">
+                    <button class="btn red" type="submit">Enviar y recibir cotización</button>
+                </form>
+                <p><a class="btn" id="waMain" target="_blank" rel="noopener" style="margin-top:16px">Escribir directo por WhatsApp</a></p>
+            </div>
+        </section>
     </main>
+    
+    <footer>
+        <div class="wrap">© PixelCraft, El Laboratorio de la Casa. Hecho con precisión y poca paciencia.</div>
+    </footer>
 
-    <!-- Modal / Formulario para Pedir Muestra Física -->
-    <div id="modalMuestra" class="modal-contenedor" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
-        <div style="background: #1e1e1e; color: #fff; padding: 25px; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
-            <h2 style="margin-top:0; color: #00ff88;">📦 Solicitar Muestra Física</h2>
-            <p style="font-size: 14px; color: #ccc;">Ingresa tus datos para enviarte la muestra personalizada a la puerta de tu casa.</p>
-            
-            <form id="formMuestra">
-                <input type="text" id="nombreCliente" placeholder="Nombre completo" required style="width:100%; padding:10px; margin: 6px 0; border-radius:6px; border:none;">
-                <input type="tel" id="telefonoWhatsApp" placeholder="WhatsApp (10 dígitos)" required style="width:100%; padding:10px; margin: 6px 0; border-radius:6px; border:none;">
-                <input type="email" id="correoElectronico" placeholder="Correo electrónico" required style="width:100%; padding:10px; margin: 6px 0; border-radius:6px; border:none;">
-                
-                <h4 style="margin: 10px 0 5px 0; color: #00ff88;">Dirección de Envío</h4>
-                <input type="text" id="calleNumero" placeholder="Calle y número exterior/interior" required style="width:100%; padding:10px; margin: 4px 0; border-radius:6px; border:none;">
-                <input type="text" id="colonia" placeholder="Colonia / Fraccionamiento" required style="width:100%; padding:10px; margin: 4px 0; border-radius:6px; border:none;">
-                <div style="display:flex; gap:8px;">
-                    <input type="text" id="codigoPostal" placeholder="C.P." required style="width:40%; padding:10px; margin: 4px 0; border-radius:6px; border:none;">
-                    <input type="text" id="ciudadEstado" placeholder="Ciudad y Estado" required style="width:60%; padding:10px; margin: 4px 0; border-radius:6px; border:none;">
-                </div>
-
-                <!-- Selección del Tipo de Solicitud -->
-                <label style="display:block; margin-top:12px; font-weight:bold;">¿Qué deseas hacer?</label>
-                <select id="tipoSolicitud" style="width:100%; padding:10px; margin: 6px 0; border-radius:6px; border:none; background:#333; color:#fff;">
-                    <option value="Muestra_1_pieza">Probar con 1 Muestra Física antes de pedir volumen</option>
-                    <option value="Cotizacion_100_piezas">Quiero cotizar directo 100+ piezas</option>
-                </select>
-
-                <div style="display:flex; justify-content: space-between; margin-top: 18px;">
-                    <button type="button" onclick="cerrarModalMuestra()" style="padding: 10px 20px; background: #555; color: white; border: none; border-radius: 6px; cursor: pointer;">Cancelar</button>
-                    <button type="submit" style="padding: 10px 20px; background: #00ff88; color: #000; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">Enviar Solicitud 🚀</button>
-                </div>
-            </form>
+    <aside id="cart" aria-label="Carrito">
+        <div class="row" style="justify-content:space-between">
+            <h3>Tu carrito</h3>
+            <button class="btn" id="closeCart" aria-label="Cerrar carrito">✕</button>
         </div>
+        <div id="items"></div>
+        <b id="total"></b>
+        <button class="btn red" id="pay">Pagar con Stripe</button>
+    </aside>
+    <div class="dock">
+        <a class="btn red" href="#contacto">Cotizar</a>
+        <a class="btn" id="waDock" target="_blank" rel="noopener">WhatsApp</a>
     </div>
+    <div id="toast" role="status"></div>
 
-    <script src="script.js"></script>
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>

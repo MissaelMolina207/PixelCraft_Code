@@ -1,0 +1,122 @@
+/* =========================================================
+   PIXELCRAFT · styles.css
+   1 Tokens · 2 Base · 3 Botones · 4 Secciones · 5 Estudio/mockup · 6 Formulario · 7 Accesibilidad
+   ========================================================= */
+
+/* 1. TOKENS — tu sistema; los azules ya son sus equivalentes en rojo.
+   Contraste: texto blanco va sobre --red (5.8:1). --red-hot (3.9:1) solo para texto/bordes sobre negro. */
+:root {
+  --black: #090909;  --black-2: #030407;
+  --white: #f7f8fb;  --soft-white: rgba(247, 248, 251, .78);
+  --red: #cd0000;    --red-hot: #ff003b;   --red-dark: #580011;
+  --mint: #00ff88;   --border: #260a0f;
+  --font: 'Poppins', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+  --max: 1100px;
+}
+
+/* 2. BASE */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+body { background: var(--black-2); color: var(--white); font: 400 1rem/1.55 var(--font);
+       display: flex; flex-direction: column; align-items: center; }
+section, header { width: 100%; max-width: var(--max); padding: 56px 16px; }
+h1 { font-size: clamp(2rem, 7vw, 3.6rem); line-height: 1.08; letter-spacing: -1px; max-width: 20ch; }
+h2 { font-size: clamp(1.4rem, 4vw, 2rem); margin-bottom: 28px; max-width: 28ch; }
+h3 { font-size: 1.05rem; margin-bottom: 6px; }
+p, dd { color: var(--soft-white); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } /* oculto pero enfocable */
+[hidden] { display: none !important; }
+
+/* 3. BOTONES — un componente, tres variantes */
+.btn { display: inline-block; padding: 12px 24px; border-radius: 8px; border: 1px solid transparent;
+       font: 700 .95rem var(--font); text-align: center; text-decoration: none; cursor: pointer;
+       transition: transform .15s, box-shadow .15s, background .15s; }
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: scale(.97); }
+.btn:disabled { opacity: .5; cursor: wait; }
+.btn:focus-within { outline: 2px solid var(--mint); outline-offset: 3px; }
+.btn--hot   { background: var(--red); color: #fff; box-shadow: 0 0 18px rgba(255, 0, 59, .35); }
+.btn--hot:hover { box-shadow: 0 0 28px rgba(255, 0, 59, .6); }
+.btn--mint  { background: var(--mint); color: #000; }
+.btn--ghost { border-color: var(--red-hot); color: var(--red-hot); }
+.btn--ghost:hover { background: var(--red); color: #fff; }
+
+/* 4. SECCIONES — alineación a la izquierda; solo los productos son tarjetas */
+.topbar { position: sticky; top: 0; z-index: 10; width: 100%; display: flex; justify-content: space-between; align-items: center;
+          padding: 10px 16px; background: rgba(3, 4, 7, .88); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
+.logo { color: var(--white); font-weight: 700; letter-spacing: 1px; text-decoration: none; }
+.hero { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; padding-top: 72px; }
+.lead { max-width: 52ch; font-size: 1.05rem; }
+.cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.trust { display: flex; gap: 8px 20px; flex-wrap: wrap; list-style: none; font-size: .8rem; color: var(--soft-white); }
+
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; list-style: none; counter-reset: paso; }
+.steps li { counter-increment: paso; color: var(--soft-white); }
+.steps li::before { content: counter(paso); display: block; font: 400 2.4rem var(--mono); color: var(--red-hot); }
+.steps b { color: var(--white); }
+
+.services div { display: flex; gap: 8px 24px; flex-wrap: wrap; padding: 16px 0; border-top: 1px solid var(--border); }
+.services dt { flex: 1 1 240px; font-weight: 600; }
+.services dd { flex: 2 1 300px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.card { display: flex; flex-direction: column; gap: 10px; padding: 18px; background: var(--black);
+        border: 1px solid var(--border); border-radius: 12px; transition: border-color .2s; }
+.card:hover { border-color: var(--red-hot); }
+.card__img { display: grid; place-items: center; height: 170px; font-size: 3rem; background: var(--black-2); border-radius: 8px; }
+.price { font: 400 1.3rem var(--mono); color: var(--red-hot); }
+
+.why { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+.why > div { border-top: 3px solid var(--red-hot); padding-top: 12px; }
+footer { width: 100%; padding: 28px 16px; text-align: center; font-size: .75rem; color: var(--soft-white); border-top: 1px solid var(--border); }
+
+/* 5. ESTUDIO + MOCKUP — el producto en blanco es CSS puro (0 KB de imagen).
+   Producto nuevo = copiar un bloque [data-producto] y ajustar variables (--x/--y/--w/--h = zona de impresión). */
+.studio { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px; align-items: center; padding: 24px;
+          background: var(--black); border: 1px solid var(--red-hot); border-radius: 12px; box-shadow: 0 0 28px rgba(255, 0, 59, .18); }
+.studio__ctl { display: flex; flex-direction: column; gap: 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { padding: 8px 14px; border-radius: 99px; border: 1px solid var(--border); background: var(--black-2);
+        color: var(--white); font: 600 .85rem var(--font); cursor: pointer; }
+.chip.is-on { border-color: var(--red-hot); background: var(--red-dark); }
+.ia { display: flex; gap: 8px; flex-wrap: wrap; }
+.ia input { flex: 1 1 200px; }
+.hint { min-height: 1.4em; font-size: .85rem; }
+
+.mockup { --x: 50%; --y: 24%; --w: 32%; --h: 34%; --inset: 0; --clip: none; --rad: 0;
+          position: relative; width: 100%; max-width: 360px; aspect-ratio: 1; margin: auto; border-radius: 12px;
+          background: radial-gradient(circle, #1a1b22, var(--black-2)); transition: opacity .3s; }
+.mockup.is-loading { opacity: .4; }
+.mockup__body { position: absolute; inset: var(--inset); clip-path: var(--clip); border-radius: var(--rad);
+                background: linear-gradient(135deg, #f6f6fa, #cfd0d9); }
+/* multiply = la tinta "se funde" con la tela y los fondos blancos del logo desaparecen */
+.mockup__art { position: absolute; left: var(--x); top: var(--y); width: var(--w); height: var(--h);
+               transform: translateX(-50%); object-fit: contain; mix-blend-mode: multiply; }
+.mockup__art.stamp { animation: stamp .45s cubic-bezier(.2, 1.4, .4, 1); }   /* el único momento "wow" */
+@keyframes stamp { from { transform: translateX(-50%) scale(1.5); opacity: 0; } }
+
+.mockup[data-producto="playera"] { --clip: polygon(32% 6%, 41% 6%, 46% 12%, 54% 12%, 59% 6%, 68% 6%, 96% 24%, 85% 42%, 77% 36%, 77% 94%, 23% 94%, 23% 36%, 15% 42%, 4% 24%); }
+.mockup[data-producto="taza"]    { --inset: 24% 26% 22% 14%; --rad: 6% 6% 16% 16%; --x: 44%; --y: 32%; --w: 36%; --h: 38%; }
+.mockup[data-producto="taza"] .mockup__body::after { content: ""; position: absolute; right: -26%; top: 18%; width: 28%; height: 48%;
+                border: 12px solid #dcdce4; border-left: 0; border-radius: 0 60% 60% 0; }   /* asa */
+.mockup[data-producto="pluma"]   { --inset: 44% 4%; --rad: 99px 30% 30% 99px; --x: 40%; --y: 45%; --w: 30%; --h: 10%; }
+.mockup[data-producto="llavero"] { --inset: 14% 28%; --rad: 22%; --y: 34%; --w: 30%; --h: 34%; }
+.mockup[data-producto="llavero"] .mockup__body {
+  background: radial-gradient(circle at 50% 9%, #1a1b22 0 5%, transparent 5.5%), linear-gradient(135deg, #f6f6fa, #cfd0d9); } /* ojal */
+
+/* 6. FORMULARIO — la acción principal de la página */
+.form { display: flex; flex-direction: column; gap: 10px; max-width: 540px; padding: 24px; background: var(--black);
+        border: 1px solid var(--red-hot); border-radius: 12px; box-shadow: 0 0 28px rgba(255, 0, 59, .18); }
+input, select, textarea { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid var(--border);
+                          background: var(--black-2); color: var(--white); font: inherit; }
+input:focus, select:focus, textarea:focus { border-color: var(--red-hot); outline: none; box-shadow: 0 0 0 2px var(--red-hot); }
+details summary { cursor: pointer; margin-bottom: 8px; font-size: .85rem; color: var(--soft-white); }
+.hp { position: absolute; left: -9999px; }
+.ok { color: var(--mint); }  .err { color: var(--red-hot); }
+
+/* 7. ACCESIBILIDAD */
+:focus-visible { outline: 2px solid var(--mint); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

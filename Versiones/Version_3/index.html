@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PixelCraft - Mira tu diseño en el producto antes de pedirlo</title>
+  <meta name="description" content="Sube tu arte, mira el mockup al instante y pide una pieza muestra de serigrafía.">
+  <!-- Precarga el producto del hero: el mockup aparece sin parpadeos -->
+  <link rel="preload" href="assets/sudadera.webp" as="image">
+  <link rel="stylesheet" href="styles.css">
+  <!-- form.js importa mockup.js; los módulos son diferidos, no bloquean el render -->
+  <script type="module" src="js/form.js"></script>
+</head>
+<body>
+<header class="nav">
+  <a class="logo" href="#top">PixelCraft <small>Studio Red</small></a>
+  <a class="btn" href="#contacto">Pedir muestra</a><!-- CTA siempre a un clic -->
+</header>
+
+<main id="top">
+  <!-- 1. HERO: la demo ES la propuesta de valor (recompensa visual en segundos) -->
+  <section class="hero">
+    <div>
+      <h1>Tu logo merece existir fuera del PDF.</h1>
+      <p>Sube tu arte, míralo en el producto y pide una pieza muestra. Después, las que quieras.</p>
+      <div class="actions">
+        <button class="btn" id="pick" type="button">Subir mi diseño</button>
+        <button class="btn btn-ghost" id="demo" type="button">Probar con la luna</button>
+        <input id="file" type="file" accept="image/*" hidden>
+      </div>
+    </div>
+    <figure class="stage">
+      <canvas id="mockup" width="1000" height="674" role="img" aria-label="Vista previa de tu diseño sobre la sudadera"></canvas>
+      <figcaption id="status" aria-live="polite">Aquí aparecerá tu obra maestra.</figcaption>
+      <a class="btn btn-ghost" id="dl" download="mockup.jpg" href="#" hidden>Descargar mockup</a>
+    </figure>
+  </section>
+
+  <!-- 2. SHOWREEL: preload="none" = cero bytes de video hasta que alguien da play -->
+  <section class="sec" id="showreel">
+    <h2>Treinta segundos de tinta</h2>
+    <video controls preload="none" playsinline poster="assets/sudadera-luna.webp">
+      <source src="assets/showreel.mp4" type="video/mp4"><!-- súbelo tú a /assets -->
+    </video>
+  </section>
+
+  <!-- 3. CÓMO FUNCIONA (añadido): es una secuencia real, por eso va numerada -->
+  <section class="sec">
+    <h2>Tres pasos. Ninguno es una junta.</h2>
+    <ol class="steps">
+      <li><strong>Sube tu arte.</strong> Logo, ilustración o ese dibujo de la libreta.</li>
+      <li><strong>Mira el mockup.</strong> En el producto, antes de gastar un peso.</li>
+      <li><strong>Pide la pieza muestra.</strong> Si te gusta, pides las que quieras.</li>
+    </ol>
+  </section>
+
+  <!-- 4. SERVICIOS -->
+  <section class="sec" id="servicios">
+    <h2>Qué estampamos</h2>
+    <ul class="list">
+      <li><strong>Sudaderas</strong> Abrigan y presumen.</li>
+      <li><strong>Camisetas</strong> El clásico que nunca falla.</li>
+      <li><strong>Tazas</strong> Para que el lunes duela con estilo.</li>
+      <li><strong>Plumas</strong> Alguien se las va a robar. Publicidad gratis.</li>
+      <li><strong>Llaveros</strong> Pequeños, baratos y, a veces, perdidos con tu marca.</li>
+    </ul>
+  </section>
+
+  <!-- 5. TRABAJOS: 1 real + huecos honestos hasta que haya más -->
+  <section class="sec" id="trabajos">
+    <h2>Trabajos</h2>
+    <div class="works">
+      <figure><img src="assets/sudadera-luna.webp" alt="Sudadera con luna, montañas y bosque" width="800" height="539" loading="lazy">
+        <figcaption>Luna, bosque y cero arrepentimientos.</figcaption></figure>
+      <figure class="ph"><span>Reservado para tu marca.</span></figure>
+      <figure class="ph"><span>Reservado para tu próxima buena idea.</span></figure>
+    </div>
+  </section>
+
+  <!-- 6. POR QUÉ STUDIO RED -->
+  <section class="sec" id="porque">
+    <h2>Por qué Studio Red</h2>
+    <ul class="list">
+      <li><strong>Lo ves antes de pagar</strong> El mockup es instantáneo y gratis.</li>
+      <li><strong>Muestra primero</strong> Una pieza. Luego, la cantidad que quieras.</li>
+      <li><strong>IA para diseñar, tinta para cumplir</strong> Serigrafía real, no un render con ilusiones.</li>
+    </ul>
+  </section>
+
+  <!-- 7. CTA + FORMULARIO: el destino (n8n) vive en data-webhook -->
+  <section class="sec cta" id="contacto">
+    <h2>Pide tu pieza muestra</h2>
+    <p>Cuéntanos tu proyecto. Si ya hiciste el mockup arriba, viaja con el mensaje.</p>
+    <form id="lead" data-webhook="https://TU-N8N.com/webhook/pixelcraft-lead">
+      <label>Nombre <input name="nombre" autocomplete="name" required></label>
+      <label>Correo <input name="email" type="email" autocomplete="email" required></label>
+      <label>Eres
+        <select name="tipo"><option>Marca</option><option>Empresa</option><option>Agencia</option><option>Artista</option></select></label>
+      <label>Producto
+        <select name="producto"><option>Sudadera</option><option>Camiseta</option><option>Taza</option><option>Pluma</option><option>Llavero</option></select></label>
+      <label>Tu proyecto <textarea name="mensaje" rows="4" required></textarea></label>
+      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"><!-- honeypot anti-bots -->
+      <button class="btn" type="submit">Pedir mi pieza muestra</button>
+      <p id="msg" role="status" aria-live="polite">Usamos tus datos solo para responderte.</p>
+    </form>
+  </section>
+</main>
+
+<footer class="sec foot">PixelCraft / Studio Red. Serigrafía online con diseño asistido por IA.</footer>
+</body>
+</html>

@@ -1,0 +1,201 @@
+{
+  "name": "Pixelcraft - Leads (muestra y volumen)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "solicitud-muestra-serigraph",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a1000000-0000-4000-8000-000000000001",
+      "name": "Webhook",
+      "webhookId": "df27fab1-9dd3-427d-b6ae-867dcf1144cd"
+    },
+    {
+      "parameters": {
+        "language": "javaScript",
+        "jsCode": "// Entrada: multipart del front. Campos en $json.body; el archivo (si hay) en $binary.\nconst item = $input.first();\nconst b = item.json.body ?? {};\nconst esClic = b.tipo === 'clic_whatsapp';                 // evento de tracking, no es lead\nconst whatsapp = String(b.whatsapp ?? '').replace(/\\D/g, '');\n\nlet error = '';\nif (b.website) error = 'bot';                                                 // honeypot lleno\nelse if (!esClic && !b.nombre) error = 'nombre';\nelse if (!esClic && !/^\\d{10,13}$/.test(whatsapp)) error = 'whatsapp';\nelse if (!esClic && !/^\\S+@\\S+\\.\\S+$/.test(b.correo ?? '')) error = 'correo';\n\nreturn [{\n  json: {\n    valido: !error, error, esClic,\n    folio: 'PX-' + Date.now().toString(36).toUpperCase(),\n    fecha: b.fecha ?? new Date().toISOString(),\n    nombre: b.nombre ?? '', whatsapp, correo: b.correo ?? '',\n    tipo: b.tipo ?? '', producto: b.producto ?? '', mensaje: b.mensaje ?? '',\n    direccion: b.direccion ?? '', urlArte: b.urlArte ?? '', detalle: b.detalle ?? '',\n    tieneArchivo: Object.keys(item.binary ?? {}).length > 0,\n  },\n  binary: item.binary,   // el logo subido viaja hasta aquí: súbelo a Drive con un nodo Google Drive\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ],
+      "id": "a1000000-0000-4000-8000-000000000002",
+      "name": "Normalizar y validar"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.valido }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        0
+      ],
+      "id": "a1000000-0000-4000-8000-000000000003",
+      "name": "Es valido"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "PEGA_AQUI_EL_ID_DE_TU_SHEET",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $json.esClic ? 'Clics' : 'Leads' }}",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        720,
+        -100
+      ],
+      "id": "a1000000-0000-4000-8000-000000000004",
+      "name": "Guardar en Sheets",
+      "notes": "Crea 2 pestañas: Leads y Clics. Encabezados = nombres de campo (folio, fecha, nombre, whatsapp, correo, tipo, producto, mensaje, direccion, urlArte, tieneArchivo, detalle). Reasigna tu credencial de Google.",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { ok: true, folio: $('Normalizar y validar').item.json.folio } }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        960,
+        -100
+      ],
+      "id": "a1000000-0000-4000-8000-000000000005",
+      "name": "Responder OK"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { ok: false, error: $json.error } }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        720,
+        120
+      ],
+      "id": "a1000000-0000-4000-8000-000000000006",
+      "name": "Responder error"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalizar y validar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar y validar": {
+      "main": [
+        [
+          {
+            "node": "Es valido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Es valido": {
+      "main": [
+        [
+          {
+            "node": "Guardar en Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Responder error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar en Sheets": {
+      "main": [
+        [
+          {
+            "node": "Responder OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": []
+}
