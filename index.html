@@ -21,6 +21,7 @@
                 <a href="#estudio">Estudio IA</a>
                 <a href="#proceso">Proceso</a>
                 <a href="#contacto">Contacto</a>
+                <a href="#ayuda">Ayuda</a>
             </nav>
             <input id="q" class="search" type="search" placeholder="Buscar: llavero, playera, letrero…" aria-label="Buscar productos">
             <select id="loc" aria-label="Ubicación de entrega">
@@ -37,11 +38,11 @@
         <section class="ml-hero-section">
             <div class="ml-carousel-container" id="mlHeroCarousel">
                 <div class="ml-carousel-track" id="mlTrack">
-                    <!-- Slide 1 -->
+                    <!-- Slide 0 -->
                     <div class="ml-slide slide-0">
                         <div class="ml-slide-inner">
                             <div class="ml-slide-content">
-                            <h1>De tu idea a pieza física. Sin el “ya casi está”.</h1>
+                                <h1>De tu idea a pieza física. Sin el “ya casi está”.</h1>
                                 <p style="color:var(--soft); font-size: 1.15rem; margin: 20px 0 26px;">Prototipos 3D, serigrafía y letreros en volumen para marcas, agencias y artistas. Diseña con IA, ve el mockup y cotiza en minutos.</p>
                             </div>
                         </div>
@@ -131,59 +132,46 @@
                 </div>
             </div>
         </section>
-<!-- CATÁLOGO ESTILO MERCADO LIBRE -->
-<section id="catalogo">
-    <div class="wrap">
 
-        <!-- 1. BARRA SUPERIOR DE CATEGORÍAS (Texto deslizable) -->
-        <div class="chips-carousel-wrapper">
-            <button class="cat-nav-btn chips-prev" id="chipsPrev" aria-label="Anterior">‹</button>
-            <div class="chips ml-chips" id="chips"></div>
-            <button class="cat-nav-btn chips-next" id="chipsNext" aria-label="Siguiente">›</button>
-        </div>
+        <!-- CATÁLOGO ESTILO MERCADO LIBRE -->
+        <section id="catalogo">
+            <div class="wrap">
+                <!-- 1. BARRA SUPERIOR DE CATEGORÍAS -->
+                <div class="chips-carousel-wrapper">
+                    <button class="cat-nav-btn chips-prev" id="chipsPrev" aria-label="Anterior">‹</button>
+                    <div class="chips ml-chips" id="chips"></div>
+                    <button class="cat-nav-btn chips-next" id="chipsNext" aria-label="Siguiente">›</button>
+                </div>
 
-        <!-- 2. ATAJOS / SUBCATEGORÍAS CON ICONOS (Estilo accesos rápidos ML) -->
-        <div class="subchips-carousel-wrapper" id="subchipsWrapper">
-            <button class="cat-nav-btn subchips-prev" id="subchipsPrev" aria-label="Anterior">‹</button>
-            <div class="ml-shortcuts" id="subchips"></div>
-            <button class="cat-nav-btn subchips-next" id="subchipsNext" aria-label="Siguiente">›</button>
-        </div>
+                <!-- 2. ATAJOS / SUBCATEGORÍAS CON ICONOS -->
+                <div class="subchips-carousel-wrapper" id="subchipsWrapper">
+                    <button class="cat-nav-btn subchips-prev" id="subchipsPrev" aria-label="Anterior">‹</button>
+                    <div class="ml-shortcuts" id="subchips"></div>
+                    <button class="cat-nav-btn subchips-next" id="subchipsNext" aria-label="Siguiente">›</button>
+                </div>
 
-        <!-- 3. CARRUSEL HORIZONTAL DE PRODUCTOS -->
-        <div class="ecommerce-carousel-wrapper">
-            <button class="cat-nav-btn cat-prev" id="catPrev" aria-label="Anterior">‹</button>
-            <div class="ecommerce-grid" id="grid"></div>
-            <button class="cat-nav-btn cat-next" id="catNext" aria-label="Siguiente">›</button>
-        </div>
+                <!-- 3. CARRUSEL HORIZONTAL DE PRODUCTOS -->
+                <div class="ecommerce-carousel-wrapper">
+                    <button class="cat-nav-btn cat-prev" id="catPrev" aria-label="Anterior">‹</button>
+                    <div class="ecommerce-grid" id="grid"></div>
+                    <button class="cat-nav-btn cat-next" id="catNext" aria-label="Siguiente">›</button>
+                </div>
 
-        <p class="note" style="margin-top:16px">Precios de muestra en MXN. En volumen el costo por pieza baja: cotiza.</p>
-    </div>
-</section>
+                <p class="note" style="margin-top:16px">Precios de muestra en MXN. En volumen el costo por pieza baja: cotiza.</p>
+            </div>
+        </section>
 
+        <!-- ESTUDIO IA -->
         <section id="estudio">
             <div class="wrap">
                 <h2>Describe tu idea. Míralo puesto en el producto.</h2>
                 <div class="studio">
                     <div>
-                        <div class="tabs" id="mode">
-                            <button class="chip" data-m="a" aria-pressed="true">A: texto a imagen</button>
-                            <button class="chip" data-m="b" aria-pressed="false">B: fusión de referencias</button>
-                        </div>
-                        <div class="tabs" id="prod">
-                            <button class="chip" data-p="shirt" aria-pressed="true">Playera</button>
-                            <button class="chip" data-p="plate" aria-pressed="false">Placa o letrero</button>
-                        </div>
                         <div id="pa">
                             <textarea id="prompt" rows="4" placeholder="Ej: calavera mecánica con engranes y tipografía industrial, rojo y blanco"></textarea>
                             <button class="btn red" id="gen" style="margin-top:12px">Generar diseño</button>
                         </div>
-                        <div id="pb" hidden>
-                            <label class="drop" id="drop">Arrastra 2 o más imágenes, o toca para elegirlas<input id="files" type="file" accept="image/*" multiple hidden></label>
-                            <div class="refs" id="refs"></div>
-                            <label class="note">Intensidad de mezcla<input id="mix" type="range" min="10" max="90" value="50"></label>
-                            <button class="btn red" id="fuse" style="margin-top:12px">Fusionar imágenes</button>
-                        </div>
-                        <p class="note">Vista previa: el motor local simula la IA. En producción llama a <code>/api/generate</code> (Replicate).</p>
+                        <p class="note" style="margin-top: 14px;">Conectado al motor Replicate (Flux Schnell) en producción para generar mockups fotorrealistas profesionales.</p>
                     </div>
                     <div>
                         <canvas id="cv" width="480" height="480"></canvas>
@@ -195,7 +183,8 @@
                 </div>
             </div>
         </section>
-                <section>
+
+        <section>
             <div class="wrap">
                 <h2>Taller de verdad. Interfaz de este siglo.</h2>
                 <div class="grid g3">
@@ -214,6 +203,7 @@
                 </div>
             </div>
         </section>
+
         <section id="proceso">
             <div class="wrap">
                 <h2>Cuatro pasos. Cero misterios.</h2>
