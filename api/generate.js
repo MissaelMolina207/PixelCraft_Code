@@ -22,14 +22,13 @@ export default async function handler(req, res) {
 
   const token = process.env.REPLICATE_API_TOKEN;
   if (!token) {
-    return res.status(500).json({ error: 'Token de Replicate no configurado' });
+    return res.status(500).json({ error: 'Token de Replicate no configurado en Vercel' });
   }
 
   try {
-    const fullPrompt = `Commercial product photography, professional studio lighting, a clean white crewneck t-shirt centered on a neutral grey background, crisp detailed graphic print on the chest showing: ${prompt}. Photorealistic, 8k.`;
+    const fullPrompt = `Commercial product photography, professional studio lighting, a clean white crewneck t-shirt centered on a neutral grey background, crisp detailed graphic print on the chest showing: ${prompt}. Photorealistic, 8k resolution.`;
 
-    // Petición directa al modelo stability-ai o black-forest-labs/flux-schnell
-    const response = await fetch("https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions", {
+    const response = await fetch("https://api.replicate.com/v1/predictions", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -37,9 +36,9 @@ export default async function handler(req, res) {
         "Prefer": "wait"
       },
       body: JSON.stringify({
+        version: "f121d5f38f36301423122c4f0f29a3e20e8a719c8f3522f7c00650993952f4d1",
         input: {
           prompt: fullPrompt,
-          go_fast: true,
           num_outputs: 1,
           aspect_ratio: "1:1",
           output_format: "webp",
@@ -50,16 +49,16 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    if (!response.ok || data.error) {
-      console.error("Replicate API Error:", data);
-      return res.status(500).json({ error: data.error || 'Error al generar la imagen en Replicate' });
+    if (!response.ok) {
+      console.error("Replicate API Error Details:", data);
+      const errorMsg = typeof data.detail === 'string' ? data.detail : JSON.stringify(data);
+      return res.status(500).json({ error: `Replicate Error: ${errorMsg}` });
     }
 
     let imageUrl = null;
     if (data.output && Array.isArray(data.output)) {
       imageUrl = data.output[0];
     } else if (data.urls && data.urls.get) {
-      // Polling por si tarda unos segundos
       let statusUrl = data.urls.get;
       let statusData = data;
       
@@ -71,19 +70,21 @@ export default async function handler(req, res) {
         statusData = await check.json();
       }
 
-      if (statusData.status === "succeeded" && statusData.output) {
-        imageUrl = Array.isArray(statusData.output) ? statusData.output[0] : statusData.output;
+      if (statusData.status === "failed") {
+        return res.status(500).json({ error: "La ejecución falló en los servidores de Replicate" });
       }
+
+      imageUrl = Array.isArray(statusData.output) ? statusData.output[0] : statusData.output;
     }
 
     if (!imageUrl) {
-      return res.status(500).json({ error: "No se pudo extraer la URL de la imagen" });
+      return res.status(500).json({ error: "No se pudo extraer la URL de la imagen generada" });
     }
 
     return res.status(200).json({ imageUrl });
 
   } catch (err) {
-    console.error("Error en servidor:", err);
-    return res.status(500).json({ error: err.message });
+    console.error("Error crítico en servidor:", err);
+    return res.status(500).json({ error: err.message || 'Error interno' });
   }
 }
