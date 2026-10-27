@@ -20,11 +20,12 @@ export default async function handler(req, res) {
     const response = await fetch("https://api.replicate.com/v1/predictions", {
       method: "POST",
       headers: {
-        "Authorization": `Token ${token}`,
-        "Content-Type": "application/json"
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "Prefer": "wait"
       },
       body: JSON.stringify({
-        version: "f121d5f38f36301423122c4f0f29a3e20e8a719c8f3522f7c00650993952f4d1", // Flux Schnell
+        version: "f121d5f38f36301423122c4f0f29a3e20e8a719c8f3522f7c00650993952f4d1",
         input: {
           prompt: systemPrompt,
           num_outputs: 1,
@@ -37,15 +38,15 @@ export default async function handler(req, res) {
 
     const prediction = await response.json();
 
-    if (prediction.error) {
-      return res.status(500).json({ error: prediction.error });
+    if (!response.ok || prediction.error) {
+      return res.status(500).json({ error: prediction.error || 'Error al comunicarse con Replicate' });
     }
 
     let result = prediction;
     while (result.status !== "succeeded" && result.status !== "failed") {
       await new Promise(r => setTimeout(r, 1000));
       const checkRes = await fetch(result.urls.get, {
-        headers: { "Authorization": `Token ${token}` }
+        headers: { "Authorization": `Bearer ${token}` }
       });
       result = await checkRes.json();
     }
