@@ -21,14 +21,21 @@ export default async function handler(req, res) {
   }
 
   const token = process.env.REPLICATE_API_TOKEN;
+  
+  // Depuración en consola de Vercel (muestra longitud y si existe)
+  console.log("Verificando token de Replicate:", {
+    exists: !!token,
+    length: token ? token.length : 0,
+    prefix: token ? token.substring(0, 4) : "ninguno"
+  });
+
   if (!token) {
-    return res.status(500).json({ error: 'Token de Replicate no configurado en Vercel' });
+    return res.status(500).json({ error: 'REPLICATE_API_TOKEN no está configurado o está vacío en Vercel' });
   }
 
   try {
     const fullPrompt = `Commercial product photography, professional studio lighting, a clean white crewneck t-shirt centered on a neutral grey background, crisp detailed graphic print on the chest showing: ${prompt}. Photorealistic, 8k resolution.`;
 
-    // 1. Crear la predicción en Replicate usando Token
     const response = await fetch("https://api.replicate.com/v1/predictions", {
       method: "POST",
       headers: {
