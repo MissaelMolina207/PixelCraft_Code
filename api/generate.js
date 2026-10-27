@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // Configurar cabeceras CORS por seguridad
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -9,30 +8,28 @@ export default async function handler(req, res) {
   );
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.status(200).end();
   }
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
+  const { prompt } = req.body || {};
+  if (!prompt) {
+    return res.status(400).json({ error: 'Se requiere una descripción o prompt' });
+  }
+
+  const token = process.env.REPLICATE_API_TOKEN;
+  if (!token) {
+    return res.status(500).json({ error: 'Token de Replicate no configurado' });
+  }
+
   try {
-    const { prompt } = req.body || {};
+    const fullPrompt = `Commercial product photography, professional studio lighting, a clean white crewneck t-shirt centered on a neutral grey background, crisp detailed graphic print on the chest showing: ${prompt}. Photorealistic, 8k.`;
 
-    if (!prompt) {
-      return res.status(400).json({ error: 'Se requiere una descripción o prompt' });
-    }
-
-    const token = process.env.REPLICATE_API_TOKEN;
-    if (!token) {
-      return res.status(500).json({ error: 'REPLICATE_API_TOKEN no está configurado en Vercel' });
-    }
-
-    const systemPrompt = `Professional commercial product mockup photo of a clean white short-sleeve crewneck t-shirt centered on a smooth neutral light grey studio background. On the center of the chest, there is a crisp, high-detail graphic print showing: ${prompt}. Soft studio lighting, realistic cotton fabric texture and natural folds, photorealistic, 8k resolution.`;
-
-    // 1. Crear la predicción en Replicate usando Flux Schnell
-    const createRes = await fetch("https://api.replicate.com/v1/predictions", {
+    // Petición directa al modelo stability-ai o black-forest-labs/flux-schnell
+    const response = await fetch("https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -40,9 +37,9 @@ export default async function handler(req, res) {
         "Prefer": "wait"
       },
       body: JSON.stringify({
-        version: "f121d5f38f36301423122c4f0f29a3e20e8a719c8f3522f7c00650993952f4d1",
         input: {
-          prompt: systemPrompt,
+          prompt: fullPrompt,
+          go_fast: true,
           num_outputs: 1,
           aspect_ratio: "1:1",
           output_format: "webp",
@@ -51,46 +48,42 @@ export default async function handler(req, res) {
       })
     });
 
-    const prediction = await createRes.json();
+    const data = await response.json();
 
-    if (!createRes.ok || prediction.error) {
-      return res.status(500).json({ error: prediction.error || 'Error al comunicarse con la API de Replicate' });
+    if (!response.ok || data.error) {
+      console.error("Replicate API Error:", data);
+      return res.status(500).json({ error: data.error || 'Error al generar la imagen en Replicate' });
     }
 
     let imageUrl = null;
-    let result = prediction;
-
-    // Si ya viene el output directo por el header "Prefer: wait"
-    if (result.output && result.output.length > 0) {
-      imageUrl = Array.isArray(result.output) ? result.output[0] : result.output;
-    } else if (result.urls && result.urls.get) {
-      // 2. Polling si la predicción está en proceso
-      while (result.status !== "succeeded" && result.status !== "failed") {
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        const statusRes = await fetch(result.urls.get, {
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
+    if (data.output && Array.isArray(data.output)) {
+      imageUrl = data.output[0];
+    } else if (data.urls && data.urls.get) {
+      // Polling por si tarda unos segundos
+      let statusUrl = data.urls.get;
+      let statusData = data;
+      
+      while (statusData.status !== "succeeded" && statusData.status !== "failed") {
+        await new Promise(r => setTimeout(r, 1000));
+        const check = await fetch(statusUrl, {
+          headers: { "Authorization": `Bearer ${token}` }
         });
-        result = await statusRes.json();
+        statusData = await check.json();
       }
 
-      if (result.status === "failed") {
-        return res.status(500).json({ error: "La generación de la imagen falló en el motor de IA" });
+      if (statusData.status === "succeeded" && statusData.output) {
+        imageUrl = Array.isArray(statusData.output) ? statusData.output[0] : statusData.output;
       }
-
-      imageUrl = Array.isArray(result.output) ? result.output[0] : result.output;
     }
 
     if (!imageUrl) {
-      return res.status(500).json({ error: "No se pudo obtener la URL de la imagen generada" });
+      return res.status(500).json({ error: "No se pudo extraer la URL de la imagen" });
     }
 
     return res.status(200).json({ imageUrl });
 
-  } catch (error) {
-    console.error("Error crítico en generate API:", error);
-    return res.status(500).json({ error: error.message || 'Error interno del servidor' });
+  } catch (err) {
+    console.error("Error en servidor:", err);
+    return res.status(500).json({ error: err.message });
   }
 }
