@@ -28,10 +28,11 @@ export default async function handler(req, res) {
   try {
     const fullPrompt = `Commercial product photography, professional studio lighting, a clean white crewneck t-shirt centered on a neutral grey background, crisp detailed graphic print on the chest showing: ${prompt}. Photorealistic, 8k resolution.`;
 
+    // 1. Crear la predicción en Replicate usando Token
     const response = await fetch("https://api.replicate.com/v1/predictions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${token}`,
+        "Authorization": `Token ${token}`,
         "Content-Type": "application/json",
         "Prefer": "wait"
       },
@@ -65,7 +66,7 @@ export default async function handler(req, res) {
       while (statusData.status !== "succeeded" && statusData.status !== "failed") {
         await new Promise(r => setTimeout(r, 1000));
         const check = await fetch(statusUrl, {
-          headers: { "Authorization": `Bearer ${token}` }
+          headers: { "Authorization": `Token ${token}` }
         });
         statusData = await check.json();
       }
