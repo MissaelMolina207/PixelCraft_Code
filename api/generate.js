@@ -15,39 +15,18 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
-  const { prompt } = req.body || {};
-  if (!prompt) {
-    return res.status(400).json({ error: 'Se requiere una descripción o prompt' });
-  }
-
-  const token = process.env.HUGGINGFACE_API_KEY;
-  if (!token) {
-    return res.status(500).json({ error: 'HUGGINGFACE_API_KEY no está configurado en Vercel' });
-  }
-
   try {
-    const fullPrompt = `Commercial product photography, professional studio lighting, a clean white crewneck t-shirt centered on a neutral grey background, crisp detailed graphic print on the chest showing: ${prompt}. Photorealistic, 8k resolution, highly detailed fabric texture.`;
-
-    // Petición al modelo gratuito de Flux Schnell en Hugging Face
-    const response = await fetch("https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ inputs: fullPrompt })
-    });
-
-    if (!response.ok) {
-      const errText = await response.text();
-      console.error("Hugging Face API Error:", errText);
-      return res.status(500).json({ error: `Error en Hugging Face: ${errText}` });
+    const { prompt } = req.body || {};
+    if (!prompt) {
+      return res.status(400).json({ error: 'Se requiere una descripción o prompt' });
     }
 
-    // Hugging Face devuelve la imagen binaria directamente, la convertimos a Base64 Data URI
-    const arrayBuffer = await response.arrayBuffer();
-    const base64 = Buffer.from(arrayBuffer).toString('base64');
-    const imageUrl = `data:image/jpeg;base64,${base64}`;
+    // Prompt comercial optimizado para mockups fotorrealistas de playeras
+    const fullPrompt = `Commercial product photography, professional studio lighting, a clean white crewneck t-shirt centered on a neutral grey background, crisp detailed graphic print on the chest showing: ${prompt}. Photorealistic, 8k resolution, highly detailed fabric texture.`;
+
+    // Generamos la URL directa utilizando el motor Flux de alta calidad de forma gratuita
+    const encodedPrompt = encodeURIComponent(fullPrompt);
+    const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=1024&nologo=true&model=flux`;
 
     return res.status(200).json({ imageUrl });
 
