@@ -1,0 +1,10 @@
+{
+  "name": "pixelcraft",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "static": "npx serve .",
+    "dev": "npx vercel dev"
+  },
+  "engines": { "node": "22.x" }
+}

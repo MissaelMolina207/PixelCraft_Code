@@ -1,0 +1,15 @@
+:root {
+    --black: #090909;
+    --black-2: #030407;
+    --white: #f7f8fb;
+    --soft: rgba(247, 248, 251, 0.78);
+    --red: #cd0000;
+    --red-hot: #ff0000;
+    --red-dark: #580000;
+    --line: rgba(247, 248, 251, 0.12);
+    --card: #111214;
+    color-scheme: dark;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}

@@ -167,11 +167,20 @@
                 <h2>Describe tu idea. Míralo puesto en el producto.</h2>
                 <div class="studio">
                     <div>
+                        <div class="tabs" role="tablist">
+                            <button class="btn red" id="tabText" type="button" role="tab">Texto → Playera</button>
+                            <button class="btn" id="tabFusion" type="button" role="tab">Fusionar mi arte</button>
+                        </div>
                         <div id="pa">
+                            <label class="drop" id="drop" style="display:none">
+                                <input type="file" id="file" accept="image/png,image/jpeg,image/webp" hidden>
+                                <span id="dropTxt">Arrastra tu arte aquí o toca para subirlo (PNG, JPG, WebP)</span>
+                            </label>
+                            <div class="refs" id="refs" style="display:none"></div>
                             <textarea id="prompt" rows="4" placeholder="Ej: calavera mecánica con engranes y tipografía industrial, rojo y blanco"></textarea>
                             <button class="btn red" id="gen" style="margin-top:12px">Generar diseño</button>
                         </div>
-                        <p class="note" style="margin-top: 14px;">Conectado al motor Replicate (Flux Schnell) en producción para generar mockups fotorrealistas profesionales.</p>
+                        <p class="note" style="margin-top: 14px;">Dos modos: describe tu idea, o sube tu arte y míralo estampado en la playera. Mockups generados con IA vía Replicate.</p>
                     </div>
                     <div>
                         <canvas id="cv" width="480" height="480"></canvas>

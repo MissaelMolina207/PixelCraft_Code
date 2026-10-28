@@ -1,0 +1,12 @@
+[
+  {"id":"llavero-3d","name":"Llavero 3D personalizado","cat":"3d","price":89,"tag":"3D","unit":"desde 10 pzs"},
+  {"id":"prototipo-resina","name":"Prototipo funcional en resina","cat":"3d","price":349,"tag":"SLA","unit":"pieza"},
+  {"id":"playera-1t","name":"Playera serigrafía 1 tinta","cat":"screen","price":219,"tag":"SCREEN","unit":"desde 12 pzs"},
+  {"id":"tote-2t","name":"Tote bag 2 tintas","cat":"screen","price":149,"tag":"TOTE","unit":"desde 24 pzs"},
+  {"id":"letrero-3d","name":"Letrero 3D en volumen","cat":"cut","price":1290,"tag":"VOL","unit":"muestra"},
+  {"id":"corte-laser","name":"Corte láser en acrílico","cat":"cut","price":390,"tag":"LASER","unit":"pieza"},
+  {"id":"stickers-50","name":"Stickers troquelados x50","cat":"promo","price":199,"tag":"DIE","unit":"paquete"},
+  {"id":"kit-promo","name":"Kit promo: taza y stickers","cat":"promo","price":259,"tag":"KIT","unit":"kit"},
+  {"id":"ia-shirt","name":"Muestra IA: Playera","cat":"ia","price":249,"hidden":true},
+  {"id":"ia-plate","name":"Muestra IA: Placa o letrero","cat":"ia","price":449,"hidden":true}
+]
