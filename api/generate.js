@@ -56,10 +56,6 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ imageUrl });
 
-  } cmd => {
-    // Captura de seguridad general
-    console.error("Error crítico:", cmd);
-    return res.status(500).json({ error: 'Error interno en el servidor' });
   } catch (err) {
     console.error("Error crítico en servidor:", err);
     return res.status(500).json({ error: err.message || 'Error interno' });
