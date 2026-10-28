@@ -21,12 +21,12 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Se requiere una descripción o prompt' });
     }
 
-    // Estructuramos el prompt optimizado para el mockup de la playera
-    const fullPrompt = `Commercial product photography, professional studio lighting, a clean white crewneck t-shirt centered on a neutral grey background, crisp detailed graphic print on the chest showing: ${prompt}. Photorealistic, 8k resolution.`;
+    // Prompt comercial optimizado para mockups fotorrealistas
+    const fullPrompt = `Commercial product photography, professional studio lighting, a clean white crewneck t-shirt centered on a neutral grey background, crisp detailed graphic print on the chest showing: ${prompt}. Photorealistic, 8k resolution, highly detailed fabric texture.`;
 
-    // Generamos la URL directa con el motor gratuito Pollinations.ai
+    // Usamos Pollinations especificando el modelo 'flux' para máxima calidad gratis
     const encodedPrompt = encodeURIComponent(fullPrompt);
-    const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=1024&nologo=true`;
+    const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=1024&nologo=true&model=flux`;
 
     return res.status(200).json({ imageUrl });
 
