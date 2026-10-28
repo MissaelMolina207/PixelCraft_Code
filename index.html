@@ -160,30 +160,34 @@
                 <p class="note" style="margin-top:16px">Precios de muestra en MXN. En volumen el costo por pieza baja: cotiza.</p>
             </div>
         </section>
-
-        <!-- ESTUDIO IA -->
+    <!-- ESTUDIO IA -->
         <section id="estudio">
             <div class="wrap">
-                <h2>Describe tu idea. Míralo puesto en el producto.</h2>
+                <h2>Describe tu idea. Míralo hecho realidad.</h2>
                 <div class="studio">
                     <div>
                         <div class="tabs" role="tablist">
-                            <button class="btn red" id="tabText" type="button" role="tab">Texto → Playera</button>
-                            <button class="btn" id="tabFusion" type="button" role="tab">Fusionar mi arte</button>
+                            <button class="btn red" id="tabText" type="button" role="tab">Diseño con IA</button>
+                            <button class="btn" id="tabFusion" type="button" role="tab">Subir referencia</button>
                         </div>
                         <div id="pa">
                             <label class="drop" id="drop" style="display:none">
                                 <input type="file" id="file" accept="image/png,image/jpeg,image/webp" hidden>
-                                <span id="dropTxt">Arrastra tu arte aquí o toca para subirlo (PNG, JPG, WebP)</span>
+                                <span id="dropTxt">Arrastra tu arte o referencia aquí o toca para subirlo (PNG, JPG, WebP)</span>
                             </label>
                             <div class="refs" id="refs" style="display:none"></div>
-                            <textarea id="prompt" rows="4" placeholder="Ej: calavera mecánica con engranes y tipografía industrial, rojo y blanco"></textarea>
+                            <textarea id="prompt" rows="4" placeholder="Ej: un soporte para celular con forma de nave espacial, o un llavero 3D con letras metálicas..."></textarea>
                             <button class="btn red" id="gen" style="margin-top:12px">Generar diseño</button>
                         </div>
-                        <p class="note" style="margin-top: 14px;">Dos modos: describe tu idea, o sube tu arte y míralo estampado en la playera. Mockups generados con IA vía Replicate.</p>
+                        <p class="note" style="margin-top: 14px;">Describe cualquier producto, pieza 3D, accesorio o artículo personalizado: la IA generará el render fotorrealista exacto de tu solicitud.</p>
                     </div>
                     <div>
-                        <canvas id="cv" width="480" height="480"></canvas>
+                        <!-- Contenedor visual adaptado para mostrar la imagen generada directamente -->
+                        <div id="aiResultContainer" style="width: 100%; aspect-ratio: 1/1; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
+                            <canvas id="cv" width="480" height="480" style="display:none; width: 100%; height: 100%; object-fit: contain;"></canvas>
+                            <img id="aiGeneratedImage" alt="Mockup generado por IA" style="display:none; width: 100%; height: 100%; object-fit: contain;" />
+                            <span El que suena es la estufa Yo no id="aiPlaceholderText" style="color: var(--soft); text-align: center; padding: 20px; font-size: 0.9rem;">Tu render fotorrealista aparecerá aquí</span>
+                        </div>
                         <div class="row" style="margin-top:12px">
                             <button class="btn red off" id="buy">Comprar muestra directa</button>
                             <a class="btn off" id="wa" target="_blank" rel="noopener">Cotizar idea por WhatsApp</a>
