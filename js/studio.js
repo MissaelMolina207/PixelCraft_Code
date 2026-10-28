@@ -150,6 +150,9 @@ export function initStudio() {
     openCart();
   };
 
+  // Oculta "Fusionar mi arte" si el servidor no tiene motor para ese modo (p. ej. solo Cloudflare configurado).
+  fetch('/api/generate').then(r => r.json()).then(c => { if (!c.fusion) $('#tabFusion').style.display = 'none'; }).catch(() => {});
+
   setMode('text');
   mock();
 }
