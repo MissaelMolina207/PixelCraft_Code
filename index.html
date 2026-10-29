@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/tokens.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/studio-chat.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
@@ -163,36 +164,41 @@
     <!-- ESTUDIO IA -->
         <section id="estudio">
             <div class="wrap">
-                <h2>Describe tu idea. Míralo hecho realidad.</h2>
-                <div class="studio">
-                    <div>
-                        <div class="tabs" role="tablist">
-                            <button class="btn red" id="tabText" type="button" role="tab">Diseño con IA</button>
-                            <button class="btn" id="tabFusion" type="button" role="tab">Subir referencia</button>
+                <h2>Platica tu idea. Míralo hecho realidad.</h2>
+                <p class="studio-lead">Escribe lo que imaginas, sube tu arte si ya lo tienes y ajústalo hasta que te encante. Cuando estés listo, lo cotizamos por WhatsApp.</p>
+
+                <div class="chat" id="chat">
+                    <header class="chat-head">
+                        <div class="chat-title">
+                            <span class="chat-dot" aria-hidden="true"></span>
+                            <strong>Estudio IA</strong>
+                            <small id="chatBadge">Borradores gratis</small>
                         </div>
-                        <div id="pa">
-                            <label class="drop" id="drop" style="display:none">
-                                <input type="file" id="file" accept="image/png,image/jpeg,image/webp" hidden>
-                                <span id="dropTxt">Arrastra tu arte o referencia aquí o toca para subirlo (PNG, JPG, WebP)</span>
-                            </label>
-                            <div class="refs" id="refs" style="display:none"></div>
-                            <textarea id="prompt" rows="4" placeholder="Ej: un soporte para celular con forma de nave espacial, o un llavero 3D con letras metálicas..."></textarea>
-                            <button class="btn red" id="gen" style="margin-top:12px">Generar diseño</button>
+                        <button class="btn" id="chatReset" type="button">Nueva idea</button>
+                    </header>
+
+                    <div class="chat-log" id="chatLog" role="log" aria-live="polite" aria-relevant="additions"></div>
+
+                    <div class="chat-cta" id="chatCta" hidden>
+                        <div class="chat-cta-text">
+                            <strong>¿Te gustó cómo va?</strong>
+                            <small id="ctaNote">Descarga la imagen y adjúntala en el chat de WhatsApp.</small>
                         </div>
-                        <p class="note" style="margin-top: 14px;">Describe cualquier producto, pieza 3D, accesorio o artículo personalizado: la IA generará el render fotorrealista exacto de tu solicitud.</p>
+                        <a class="btn red pulse" id="chatQuote" target="_blank" rel="noopener">Cotizar por WhatsApp</a>
                     </div>
-                    <div>
-                        <!-- Contenedor visual adaptado para mostrar la imagen generada directamente -->
-                        <div id="aiResultContainer" style="width: 100%; aspect-ratio: 1/1; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
-                            <canvas id="cv" width="480" height="480" style="display:none; width: 100%; height: 100%; object-fit: contain;"></canvas>
-                            <img id="aiGeneratedImage" alt="Mockup generado por IA" style="display:none; width: 100%; height: 100%; object-fit: contain;" />
-                            <span El que suena es la estufa Yo no id="aiPlaceholderText" style="color: var(--soft); text-align: center; padding: 20px; font-size: 0.9rem;">Tu render fotorrealista aparecerá aquí</span>
+
+                    <form class="chat-composer" id="chatForm" autocomplete="off">
+                        <div class="chat-tray" id="chatTray" hidden></div>
+                        <div class="chat-row">
+                            <input type="file" id="chatFile" accept="image/png,image/jpeg,image/webp" multiple hidden>
+                            <button class="chat-icon" id="chatAttach" type="button" aria-label="Adjuntar tu arte o referencia" title="Adjuntar tu arte o referencia">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.4 11.1-8.5 8.5a5.5 5.5 0 0 1-7.8-7.8l8.5-8.5a3.7 3.7 0 0 1 5.2 5.2l-8.5 8.5a1.8 1.8 0 0 1-2.6-2.6l7.8-7.8"/></svg>
+                            </button>
+                            <textarea id="chatInput" rows="1" maxlength="300" aria-label="Describe tu idea" placeholder="Describe tu idea. Ej: playera con un hot dog retro"></textarea>
+                            <button class="btn red chat-send" id="chatSend" type="submit">Enviar</button>
                         </div>
-                        <div class="row" style="margin-top:12px">
-                            <button class="btn red off" id="buy">Comprar muestra directa</button>
-                            <a class="btn off" id="wa" target="_blank" rel="noopener">Cotizar idea por WhatsApp</a>
-                        </div>
-                    </div>
+                        <small class="chat-hint">Enter envía · Shift+Enter nueva línea · Puedes pegar o arrastrar tu imagen aquí.</small>
+                    </form>
                 </div>
             </div>
         </section>

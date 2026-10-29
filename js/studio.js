@@ -1,170 +1,180 @@
-// js/studio.js — Estudio IA: dos modos.
-//   text   → describes la idea y la IA dibuja la playera con la estampa.
-//   fusion → subes tu arte y la IA lo estampa en el pecho de una playera (como el ejemplo de Gemini).
-// js/studio.js — Estudio IA adaptado para renderizado directo de imágenes
-import { $, toast, wa, post } from './utils.js';
+// js/studio.js — Orquestador del Estudio IA (chat): estado, red y reglas de negocio.
+// El DOM vive en studio-ui.js; el procesamiento de imágenes en studio-images.js; los prompts en el servidor (lib/prompts.js).
+import { fmt, toast, wa, post } from './utils.js';
 import { store } from './store.js';
 import { addItem, openCart } from './cart.js';
+import { prepareImage, thumbnail, MAX_IMAGES } from './studio-images.js';
+import { createChatUI } from './studio-ui.js';
 
-const MAX_CHARS = 340_000; 
-const S = { mode: 'text', artUrl: null, prompt: '', ref: null, busy: false };
-let cv, cx;
+/** Producto del chat → muestra comprable en products.json (hidden:true). Sin entrada = solo cotización. */
+const SAMPLE_ID = { playera: 'ia-shirt', letrero: 'ia-plate', acrilico: 'ia-plate' };
 
-function updateUIState() {
-  const hasArt = !!S.artUrl;
-  const imgEl = $('#aiGeneratedImage');
-  const placeholder = $('#aiPlaceholderText');
+const START_CHIPS = ['Una playera con un hot dog retro', 'Llavero 3D con mi mascota', 'Stickers troquelados de mi marca', 'Taza para regalo de cumpleaños'];
+const FOLLOW_CHIPS = ['Hazlo en otros colores', 'Más minimalista', 'Estilo retro', 'Ponlo en una sudadera'];
+const WAIT = [[0, 'Entendiendo tu idea…'], [1800, 'Mejorando el prompt…'], [4500, 'Dibujando tu diseño…'], [14000, 'Esto toma unos segundos más…']];
+const ERR = {
+  404: 'El API no responde aquí. En local usa "vercel dev"; en producción revisa el deploy.',
+  413: 'Las imágenes pesan demasiado. Prueba con una más ligera.',
+  504: 'Tardó demasiado. Intenta de nuevo.'
+};
 
-  if (hasArt) {
-    if (imgEl) {
-      imgEl.src = S.artUrl;
-      imgEl.style.display = 'block';
-    }
-    if (placeholder) placeholder.style.display = 'none';
-  } else {
-    if (imgEl) imgEl.style.display = 'none';
-    if (placeholder) {
-      placeholder.style.display = 'block';
-      placeholder.textContent = 'Tu render fotorrealista aparecerá aquí';
-    }
-  }
+const S = {
+  refs: [],        // imágenes de referencia: persisten toda la conversación
+  fresh: [],       // adjuntadas desde el último envío (solo para pintarlas en la burbuja)
+  prev: null,      // último brief {product, color, artwork…}: viaja al servidor para iterar ("hazlo rojo")
+  last: null,      // último diseño generado
+  asks: [],        // lo que pidió el cliente (para la cotización)
+  busy: false,
+  caps: { ready: true, refs: true, hd: false }
+};
+let ui;
 
-  ['#buy', '#wa'].forEach(s => $(s).classList.toggle('off', !hasArt));
-  const msg = 'Hola PixelCraft, quiero cotizar un diseño generado por IA.\n'
-    + (S.prompt ? `Prompt: "${S.prompt}"\n` : '') + 'Mockup: (adjunto en este chat)';
-  $('#wa').href = hasArt ? wa(store.site.whatsapp, msg) : '#';
+// El WhatsApp de site.json sigue en placeholder (5210000000000): cada lead se iría al vacío.
+const waIsPlaceholder = n => !/^\d{10,15}$/.test(n || '') || /0{7,}$/.test(n);
+
+function quoteMessage() {
+  const { spec } = S.last;
+  const asks = S.asks.slice(-3).map(a => `"${a}"`).join(' → ');
+  return [
+    'Hola PixelCraft, quiero cotizar esta pieza que diseñé en el Estudio IA:',
+    `• Producto: ${spec.label}`,
+    spec.summary ? `• Idea: ${spec.summary}` : null,
+    asks ? `• Lo que pedí: ${asks}` : null,
+    S.refs.length ? '• Usé mi propio arte (lo adjunto en este chat)' : null,
+    'Te mando la imagen del diseño aquí mismo. ¿Me ayudas con precio, cantidades y tiempos?'
+  ].filter(Boolean).join('\n');
 }
 
-function paintLoadingMsg(text) {
-  const placeholder = $('#aiPlaceholderText');
-  const imgEl = $('#aiGeneratedImage');
-  if (imgEl) imgEl.style.display = 'none';
-  if (placeholder) {
-    placeholder.style.display = 'block';
-    placeholder.textContent = text;
-  }
+function updateCta() {
+  if (!S.last) return ui.setCta();
+  const { total, used } = store.site.slots || {};
+  const left = total ? total - used : 0; // dato real de site.json, no inventado
+  ui.setCta({
+    href: wa(store.site.whatsapp, quoteMessage()),
+    note: (left > 0 ? `Quedan ${left} lugares de producción este mes. ` : '') + 'Descarga la imagen y adjúntala en el chat de WhatsApp.'
+  });
 }
 
-const toImage = src => new Promise((ok, no) => {
-  const i = new Image();
-  i.crossOrigin = 'anonymous';
-  i.onload = () => {
-    // Dibujamos de forma oculta en el canvas interno solo para el respaldo del carrito
-    if (cv && cx) {
-      const k = Math.max(480 / i.width, 480 / i.height);
-      const w = i.width * k, h = i.height * k;
-      cx.fillStyle = '#15161a';
-      cx.fillRect(0, 0, 480, 480);
-      cx.drawImage(i, (480 - w) / 2, (480 - h) / 2, w, h);
-    }
-    ok(src);
-  };
-  i.onerror = () => no(new Error('No se pudo cargar la imagen generada.'));
-  i.src = src;
-});
-
-async function prepare(file) {
-  if (!/^image\/(png|jpeg|webp)$/.test(file.type)) throw new Error('Sube un PNG, JPG o WebP.');
-  const bmp = await createImageBitmap(file);
-  const attempts = [[768, 'image/png'], [768, 'image/jpeg', .9], [640, 'image/jpeg', .8], [512, 'image/jpeg', .7], [384, 'image/jpeg', .6]];
-  for (const [max, type, q] of attempts) {
-    const k = Math.min(1, max / Math.max(bmp.width, bmp.height));
-    const c = document.createElement('canvas');
-    c.width = Math.round(bmp.width * k);
-    c.height = Math.round(bmp.height * k);
-    const g = c.getContext('2d');
-    if (type === 'image/jpeg') { g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); }
-    g.drawImage(bmp, 0, 0, c.width, c.height);
-    const url = c.toDataURL(type, q);
-    if (url.length <= MAX_CHARS) return url;
-  }
-  throw new Error('La imagen es demasiado pesada. Usa una más simple.');
+async function buy(prod, image) {
+  addItem({ id: prod.id, name: prod.name, price: prod.price, img: await thumbnail(image) });
+  openCart();
 }
 
-async function loadFile(file) {
-  if (!file) return;
+/** Botones de una imagen generada: HD (si el servidor lo permite) y muestra comprable (si el producto la tiene). */
+function actionsFor(spec, image, isHD) {
+  const actions = [];
+  if (S.caps.hd && !isHD) actions.push({ label: 'Render HD', onClick: () => renderHD(spec) });
+  const prod = store.products.find(p => p.id === SAMPLE_ID[spec.product]);
+  if (prod) actions.push({ label: `Comprar muestra · ${fmt(prod.price)}`, onClick: () => buy(prod, image) });
+  return actions;
+}
+
+/** Envuelve una llamada al servidor con el estado "ocupado" y el indicador de escritura. */
+async function withTyping(first, fn) {
+  if (S.busy) return;
+  S.busy = true;
+  ui.setBusy(true);
+  const typing = ui.typing(first[0][1]);
+  const timers = first.slice(1).map(([ms, msg]) => setTimeout(() => typing.set(msg), ms));
   try {
-    S.ref = await prepare(file);
-    $('#refs').innerHTML = `<img src="${S.ref}" alt="Arte cargado">`;
-    $('#dropTxt').textContent = 'Arte listo. Toca para cambiarlo.';
-    $('#drop').classList.add('on');
-  } catch (e) { toast(e.message); }
+    await fn();
+  } catch (e) {
+    console.error('Estudio IA:', e);
+    ui.addBot({ error: true, text: e.status ? (ERR[e.status] ?? e.message) : 'No hay conexión con el servidor. Revisa tu internet e inténtalo de nuevo.' });
+  } finally {
+    timers.forEach(clearTimeout);
+    typing.stop();
+    S.busy = false;
+    ui.setBusy(false);
+    ui.focus();
+  }
 }
 
-function setMode(m) {
-  S.mode = m;
-  $('#tabText').classList.toggle('red', m === 'text');
-  $('#tabFusion').classList.toggle('red', m === 'fusion');
-  $('#drop').style.display = m === 'fusion' ? 'block' : 'none';
-  $('#refs').style.display = m === 'fusion' ? 'flex' : 'none';
-  $('#prompt').placeholder = m === 'fusion'
-    ? 'Opcional: estilo, ajustes adicionales…'
-    : 'Ej: un soporte para celular con forma de nave espacial, o un llavero 3D con letras metálicas...';
+function ask(text) {
+  const shown = S.fresh;
+  S.fresh = [];
+  if (S.busy) return;
+  ui.addUser(text, shown);
+  return withTyping(WAIT, async () => {
+    const res = await post('/api/generate', { prompt: text, images: S.refs, prev: S.prev });
+    const image = res.image || res.imageUrl;
+    S.prev = res.spec;
+    if (text) S.asks.push(text);
+    S.last = { image, spec: res.spec };
+    ui.addBot({
+      text: res.reply, image, tag: 'Borrador', promptEn: res.promptEn,
+      actions: actionsFor(res.spec, image, false), chips: FOLLOW_CHIPS, onChip: ask
+    });
+    updateCta();
+  });
 }
 
-const WAIT = ['Generando modelo 3D…', 'Renderizando iluminación…', 'Ajustando texturas y detalles…', 'Casi listo…'];
+function renderHD(spec) {
+  return withTyping([[0, 'Renderizando en alta calidad…'], [12000, 'Afinando los detalles…']], async () => {
+    const res = await post('/api/generate', { quality: 'hd', rerender: true, prev: spec, images: S.refs, prompt: '' });
+    const image = res.image || res.imageUrl;
+    S.last = { image, spec: res.spec };
+    ui.addBot({ text: res.reply, image, tag: 'Render HD', hd: true, promptEn: res.promptEn, actions: actionsFor(res.spec, image, true) });
+    updateCta();
+  });
+}
 
-async function generate(prompt) {
-  const body = S.mode === 'fusion' ? { mode: 'fusion', prompt, image: S.ref } : { mode: 'text', prompt };
-  const res = await post('/api/generate', body);
-  return res.image || res.imageUrl;
+async function onFiles(files) {
+  if (!S.caps.refs) return toast('Por ahora el Estudio no acepta imágenes. Describe tu idea con texto.');
+  const imgs = files.filter(f => f.type.startsWith('image/'));
+  if (!imgs.length) return;
+  const room = MAX_IMAGES - S.refs.length;
+  if (imgs.length > room) toast(`Máximo ${MAX_IMAGES} imágenes.`);
+  for (const f of imgs.slice(0, Math.max(room, 0))) {
+    try {
+      const data = await prepareImage(f);
+      S.refs.push(data);
+      S.fresh.push(data);
+    } catch (e) { toast(e.message); }
+  }
+  ui.setTray(S.refs);
+  ui.focus();
+}
+
+function welcome() {
+  ui.addBot({
+    text: '¡Hola! Cuéntame qué quieres mandar a hacer: playeras, llaveros 3D, stickers, tazas, letreros… Escribe tu idea o adjunta tu arte y te muestro cómo se vería. Cuando te guste, lo cotizamos por WhatsApp.',
+    chips: START_CHIPS, onChip: ask
+  });
+}
+
+function reset() {
+  if (S.busy) return;
+  Object.assign(S, { refs: [], fresh: [], prev: null, last: null, asks: [] });
+  ui.clear();
+  ui.setTray([]);
+  ui.setCta();
+  welcome();
 }
 
 export function initStudio() {
-  cv = $('#cv');
-  if (cv) cx = cv.getContext('2d');
+  ui = createChatUI({
+    onSend: text => ask(text),
+    onFiles,
+    onRemoveRef: i => {
+      const [gone] = S.refs.splice(i, 1);
+      S.fresh = S.fresh.filter(f => f !== gone);
+      ui.setTray(S.refs);
+    },
+    onReset: reset
+  });
+  ui.onQuote(e => {
+    if (waIsPlaceholder(store.site.whatsapp)) { e.preventDefault(); toast('Falta configurar el WhatsApp del taller en data/site.json.'); }
+  });
+  welcome();
 
-  $('#tabText').onclick = () => setMode('text');
-  $('#tabFusion').onclick = () => setMode('fusion');
-  $('#file').onchange = e => loadFile(e.target.files[0]);
-  const drop = $('#drop');
-  ['dragover', 'dragenter'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('on'); }));
-  drop.addEventListener('drop', e => { e.preventDefault(); loadFile(e.dataTransfer.files[0]); });
-
-  const genBtn = $('#gen');
-  genBtn.onclick = async () => {
-    if (S.busy) return;
-    const p = $('#prompt').value.trim();
-    if (S.mode === 'text' && p.length < 3) return toast('Escribe una idea válida para generar el diseño.');
-    if (S.mode === 'fusion' && !S.ref) return toast('Primero sube tu arte.');
-
-    S.busy = true;
-    genBtn.disabled = true;
-    let n = 0;
-    const tick = () => { const m = WAIT[Math.min(n++, WAIT.length - 1)]; genBtn.textContent = m; paintLoadingMsg(m); };
-    tick();
-    const timer = setInterval(tick, 5000);
-
-    try {
-      const rawUrl = await generate(p);
-      S.artUrl = await toImage(rawUrl);
-      S.prompt = p;
-      updateUIState();
-      toast('¡Mockup generado!');
-    } catch (e) {
-      console.error('Estudio IA:', e);
-      updateUIState();
-      toast(e.status ? e.message : 'No hay conexión con el servidor. Revisa tu internet.');
-    } finally {
-      clearInterval(timer);
-      S.busy = false;
-      genBtn.disabled = false;
-      genBtn.textContent = 'Generar diseño';
+  // Capacidades del servidor: decide qué botones existen. Si falla, se asume todo disponible y el error real sale al enviar.
+  fetch('/api/generate').then(r => (r.ok ? r.json() : Promise.reject())).then(c => {
+    Object.assign(S.caps, c);
+    ui.setAttachEnabled(c.refs !== false);
+    if (c.ready === false) {
+      ui.disable('Estudio en mantenimiento. Cotiza por WhatsApp.');
+      ui.addBot({ error: true, text: 'El Estudio IA está en mantenimiento. Cuéntanos tu idea por WhatsApp y la hacemos a mano.' });
     }
-  };
-
-  $('#buy').onclick = () => {
-    if (!S.artUrl) return;
-    const prod = store.products.find(x => x.id === 'ia-shirt');
-    if (!prod) return toast('Producto no disponible. Cotiza por WhatsApp.');
-    let img = '';
-    try { img = cv.toDataURL('image/jpeg', .7); } catch { /* canvas contaminado */ }
-    addItem({ id: prod.id, name: prod.name, price: prod.price, img });
-    openCart();
-  };
-
-  fetch('/api/generate').then(r => r.json()).then(c => { if (!c.fusion) $('#tabFusion').style.display = 'none'; }).catch(() => {});
-
-  setMode('text');
-  updateUIState();
+  }).catch(() => {});
 }

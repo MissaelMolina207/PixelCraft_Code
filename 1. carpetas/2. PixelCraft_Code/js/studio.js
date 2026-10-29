@@ -1,52 +1,68 @@
 // js/studio.js — Estudio IA: dos modos.
 //   text   → describes la idea y la IA dibuja la playera con la estampa.
 //   fusion → subes tu arte y la IA lo estampa en el pecho de una playera (como el ejemplo de Gemini).
+// js/studio.js — Estudio IA adaptado para renderizado directo de imágenes
 import { $, toast, wa, post } from './utils.js';
 import { store } from './store.js';
 import { addItem, openCart } from './cart.js';
 
-const SIZE = 480;
-const MAX_CHARS = 340_000; // data URL máx. Debe ser ≤ MAX_IMAGE_CHARS de api/generate.js
-const S = { mode: 'text', art: null, prompt: '', ref: null, busy: false };
+const MAX_CHARS = 340_000; 
+const S = { mode: 'text', artUrl: null, prompt: '', ref: null, busy: false };
 let cv, cx;
 
-// ---------- Canvas ----------
-/** Dibuja la imagen cubriendo el canvas sin deformarla (el original la estiraba). */
-function drawCover(img) {
-  const k = Math.max(SIZE / img.width, SIZE / img.height);
-  const w = img.width * k, h = img.height * k;
-  cx.drawImage(img, (SIZE - w) / 2, (SIZE - h) / 2, w, h);
-}
+function updateUIState() {
+  const hasArt = !!S.artUrl;
+  const imgEl = $('#aiGeneratedImage');
+  const placeholder = $('#aiPlaceholderText');
 
-function paintMsg(text) {
-  cx.fillStyle = '#15161a';
-  cx.fillRect(0, 0, SIZE, SIZE);
-  cx.fillStyle = 'rgba(247,248,251,.6)';
-  cx.font = '600 15px system-ui';
-  cx.textAlign = 'center';
-  cx.fillText(text, SIZE / 2, SIZE / 2);
-}
+  if (hasArt) {
+    if (imgEl) {
+      imgEl.src = S.artUrl;
+      imgEl.style.display = 'block';
+    }
+    if (placeholder) placeholder.style.display = 'none';
+  } else {
+    if (imgEl) imgEl.style.display = 'none';
+    if (placeholder) {
+      placeholder.style.display = 'block';
+      placeholder.textContent = 'Tu render fotorrealista aparecerá aquí';
+    }
+  }
 
-function mock() {
-  if (S.art) { cx.fillStyle = '#15161a'; cx.fillRect(0, 0, SIZE, SIZE); drawCover(S.art); }
-  else paintMsg('Tu mockup fotorrealista aparecerá aquí');
-
-  ['#buy', '#wa'].forEach(s => $(s).classList.toggle('off', !S.art));
+  ['#buy', '#wa'].forEach(s => $(s).classList.toggle('off', !hasArt));
   const msg = 'Hola PixelCraft, quiero cotizar un diseño generado por IA.\n'
     + (S.prompt ? `Prompt: "${S.prompt}"\n` : '') + 'Mockup: (adjunto en este chat)';
-  $('#wa').href = S.art ? wa(store.site.whatsapp, msg) : '#';
+  $('#wa').href = hasArt ? wa(store.site.whatsapp, msg) : '#';
+}
+
+function paintLoadingMsg(text) {
+  const placeholder = $('#aiPlaceholderText');
+  const imgEl = $('#aiGeneratedImage');
+  if (imgEl) imgEl.style.display = 'none';
+  if (placeholder) {
+    placeholder.style.display = 'block';
+    placeholder.textContent = text;
+  }
 }
 
 const toImage = src => new Promise((ok, no) => {
   const i = new Image();
-  i.crossOrigin = 'anonymous'; // solo aplica si el servidor devolvió imageUrl; con data URL no estorba
-  i.onload = () => ok(i);
+  i.crossOrigin = 'anonymous';
+  i.onload = () => {
+    // Dibujamos de forma oculta en el canvas interno solo para el respaldo del carrito
+    if (cv && cx) {
+      const k = Math.max(480 / i.width, 480 / i.height);
+      const w = i.width * k, h = i.height * k;
+      cx.fillStyle = '#15161a';
+      cx.fillRect(0, 0, 480, 480);
+      cx.drawImage(i, (480 - w) / 2, (480 - h) / 2, w, h);
+    }
+    ok(src);
+  };
   i.onerror = () => no(new Error('No se pudo cargar la imagen generada.'));
   i.src = src;
 });
 
-// ---------- Subida de arte (fusión) ----------
-/** Reduce el arte hasta que quepa en MAX_CHARS. Vercel limita el body a 4.5 MB y Replicate prefiere data URLs ≤ 256 KB. */
 async function prepare(file) {
   if (!/^image\/(png|jpeg|webp)$/.test(file.type)) throw new Error('Sube un PNG, JPG o WebP.');
   const bmp = await createImageBitmap(file);
@@ -57,7 +73,7 @@ async function prepare(file) {
     c.width = Math.round(bmp.width * k);
     c.height = Math.round(bmp.height * k);
     const g = c.getContext('2d');
-    if (type === 'image/jpeg') { g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); } // JPEG no tiene alfa
+    if (type === 'image/jpeg') { g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); }
     g.drawImage(bmp, 0, 0, c.width, c.height);
     const url = c.toDataURL(type, q);
     if (url.length <= MAX_CHARS) return url;
@@ -75,7 +91,6 @@ async function loadFile(file) {
   } catch (e) { toast(e.message); }
 }
 
-// ---------- Modos ----------
 function setMode(m) {
   S.mode = m;
   $('#tabText').classList.toggle('red', m === 'text');
@@ -83,22 +98,21 @@ function setMode(m) {
   $('#drop').style.display = m === 'fusion' ? 'block' : 'none';
   $('#refs').style.display = m === 'fusion' ? 'flex' : 'none';
   $('#prompt').placeholder = m === 'fusion'
-    ? 'Opcional: color de playera, estilo, ajustes… (por defecto: playera blanca, tu arte al centro del pecho)'
-    : 'Ej: calavera mecánica con engranes y tipografía industrial, rojo y blanco';
+    ? 'Opcional: estilo, ajustes adicionales…'
+    : 'Ej: un soporte para celular con forma de nave espacial, o un llavero 3D con letras metálicas...';
 }
 
-// ---------- Generación ----------
-const WAIT = ['Cortando la tela…', 'Calibrando la tinta…', 'Planchando arrugas digitales…', 'La IA sigue pensando. Respeta su proceso…'];
+const WAIT = ['Generando modelo 3D…', 'Renderizando iluminación…', 'Ajustando texturas y detalles…', 'Casi listo…'];
 
 async function generate(prompt) {
   const body = S.mode === 'fusion' ? { mode: 'fusion', prompt, image: S.ref } : { mode: 'text', prompt };
   const res = await post('/api/generate', body);
-  return toImage(res.image || res.imageUrl);
+  return res.image || res.imageUrl;
 }
 
 export function initStudio() {
   cv = $('#cv');
-  cx = cv.getContext('2d');
+  if (cv) cx = cv.getContext('2d');
 
   $('#tabText').onclick = () => setMode('text');
   $('#tabFusion').onclick = () => setMode('fusion');
@@ -117,19 +131,19 @@ export function initStudio() {
     S.busy = true;
     genBtn.disabled = true;
     let n = 0;
-    const tick = () => { const m = WAIT[Math.min(n++, WAIT.length - 1)]; genBtn.textContent = m; paintMsg(m); };
+    const tick = () => { const m = WAIT[Math.min(n++, WAIT.length - 1)]; genBtn.textContent = m; paintLoadingMsg(m); };
     tick();
     const timer = setInterval(tick, 5000);
 
     try {
-      S.art = await generate(p);
+      const rawUrl = await generate(p);
+      S.artUrl = await toImage(rawUrl);
       S.prompt = p;
-      mock();
+      updateUIState();
       toast('¡Mockup generado!');
     } catch (e) {
       console.error('Estudio IA:', e);
-      mock();
-      // El servidor ya manda mensajes en español y sin datos técnicos. Sin status = sin red/servidor.
+      updateUIState();
       toast(e.status ? e.message : 'No hay conexión con el servidor. Revisa tu internet.');
     } finally {
       clearInterval(timer);
@@ -140,19 +154,17 @@ export function initStudio() {
   };
 
   $('#buy').onclick = () => {
-    if (!S.art) return;
-    // Nombre y precio salen de products.json: el mismo que usa /api/checkout. Antes el carrito mostraba $350 y Stripe cobraba $249.
+    if (!S.artUrl) return;
     const prod = store.products.find(x => x.id === 'ia-shirt');
     if (!prod) return toast('Producto no disponible. Cotiza por WhatsApp.');
     let img = '';
-    try { img = cv.toDataURL('image/jpeg', .7); } catch { /* canvas contaminado: carrito sin miniatura */ }
+    try { img = cv.toDataURL('image/jpeg', .7); } catch { /* canvas contaminado */ }
     addItem({ id: prod.id, name: prod.name, price: prod.price, img });
     openCart();
   };
 
-  // Oculta "Fusionar mi arte" si el servidor no tiene motor para ese modo (p. ej. solo Cloudflare configurado).
   fetch('/api/generate').then(r => r.json()).then(c => { if (!c.fusion) $('#tabFusion').style.display = 'none'; }).catch(() => {});
 
   setMode('text');
-  mock();
+  updateUIState();
 }
