@@ -1,4 +1,8 @@
 /* css/studio-chat.css — Estudio IA con forma de chat. Solo clases .chat-* : no toca el resto del sitio. */
+/* El header del sitio es fixed: sin esto, al saltar a #estudio el título queda tapado. */
+main section[id] {
+  scroll-margin-top: 84px;
+}
 #estudio .studio-lead {
   color: var(--soft);
   margin: -8px 0 22px;
@@ -15,40 +19,32 @@
   overflow: hidden;
 }
 
-/* ---------- Cabecera ---------- */
-.chat-head {
+/* ---------- Pie del compositor ----------
+   OJO: nunca uses la etiqueta <header> dentro del chat. components.css define header { position: fixed; top: 0 }
+   y cualquier <header> del chat se monta encima del header del sitio. */
+.chat-foot {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--line);
-  background: var(--black-2);
+  margin-top: 8px;
 }
-.chat-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
+.chat-foot .chat-hint {
+  margin-top: 0;
 }
-.chat-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--red-hot);
-  box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.18);
+.chat-reset {
   flex: none;
-}
-.chat-title small {
+  padding: 4px 2px;
+  border: 0;
+  background: none;
   color: var(--soft);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font: 500 0.8rem system-ui, sans-serif;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
 }
-.chat-head .btn {
-  min-height: 36px;
-  padding: 0 14px;
-  font-size: 0.85rem;
+.chat-reset:hover {
+  color: var(--white);
 }
 
 /* ---------- Mensajes ---------- */
@@ -362,4 +358,5 @@
   .chat-send { padding: 0 14px; }
   .chat-cta .btn { width: 100%; }
   .chat-hint { display: none; }
+  .chat-foot { justify-content: flex-end; }
 }

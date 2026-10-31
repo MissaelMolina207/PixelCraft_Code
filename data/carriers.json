@@ -1,0 +1,13 @@
+{
+  "_nota": "Plantillas de enlace de rastreo. {guide} se reemplaza por la guía. Vacío = solo se muestra la guía con botón de copiar (o el enlace que pegues en la orden). DHL, FedEx y UPS: verifícalos con una guía real antes de confiar. Estafeta, Paquetexpress y Redpack: pega aquí su URL de rastreo cuando la tengas.",
+  "carriers": {
+    "Estafeta": "",
+    "DHL": "https://www.dhl.com/mx-es/home/rastreo.html?tracking-id={guide}",
+    "FedEx": "https://www.fedex.com/fedextrack/?trknbr={guide}",
+    "UPS": "https://www.ups.com/track?tracknum={guide}",
+    "Paquetexpress": "",
+    "Redpack": "",
+    "Correos de México": "",
+    "Entrega en mano": ""
+  }
+}

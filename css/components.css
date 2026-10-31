@@ -64,41 +64,41 @@ header .wrap {
     color: var(--red-hot);
 }
 nav {
-  display: none;
-  gap: 18px;
-  color: var(--soft);
-  font-size: 0.9rem;
+    display: none;
+    gap: 18px;
+    color: var(--soft);
+    font-size: 0.9rem;
 }
 nav a:hover {
-  color: var(--white);
+    color: var(--white);
 }
 .search {
-  flex: 1;
-  min-width: 0;
+    flex: 1;
+    min-width: 0;
 }
 #loc {
-  display: none;
-  width: auto;
+    display: none;
+    width: auto;
 }
 #count {
-  background: var(--red-hot);
-  border-radius: 99px;
-  min-width: 20px;
-  height: 20px;
-  font-size: 0.75rem;
-  display: grid;
-  place-items: center;
-  padding: 0 5px;
+    background: var(--red-hot);
+    border-radius: 99px;
+    min-width: 20px;
+    height: 20px;
+    font-size: 0.75rem;
+    display: grid;
+    place-items: center;
+    padding: 0 5px;
 }
 .trust {
-  margin-top: 26px;
-  gap: 8px 20px;
-  color: var(--soft);
-  font-size: 0.85rem;
+    margin-top: 26px;
+    gap: 8px 20px;
+    color: var(--soft);
+    font-size: 0.85rem;
 }
 .trust span::before {
-  content: "✓ ";
-  color: var(--red-hot);
+    content: "✓ ";
+    color: var(--red-hot);
 }
 .slots {
   margin-top: 22px;
@@ -502,7 +502,7 @@ footer {
 }
 
 /* ==========================================================================
-  REGLAS RESPONSIVAS PUNTUALES (Estilo Mercado Libre en Móvil / Ventana Pequeña)
+    REGLAS RESPONSIVAS PUNTUALES (Estilo Mercado Libre en Móvil / Ventana Pequeña)
    ========================================================================== */
 @media (max-width: 768px) {
     .ml-slide {

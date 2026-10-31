@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Rastrea tu pedido — PixelCraft</title>
+    <meta name="description" content="Consulta en qué etapa va tu pedido de PixelCraft con tu folio.">
+    <meta name="robots" content="noindex">
+    <link rel="stylesheet" href="css/tokens.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/track.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <header>
+        <div class="wrap">
+            <a class="logo" href="index.html">PIXEL <b>CRAFT</b></a>
+            <nav>
+                <a href="index.html#catalogo">Catálogo</a>
+                <a href="index.html#estudio">Estudio IA</a>
+                <a href="rastreo.html" aria-current="page">Rastreo</a>
+            </nav>
+            <a class="btn" href="index.html">Volver a la tienda</a>
+        </div>
+    </header>
+
+    <main class="track-page">
+        <div class="wrap">
+            <h1>Rastrea tu pedido</h1>
+            <p class="track-lead">Escribe tu folio y los últimos 4 dígitos del teléfono con el que cotizaste. Sin cuentas, sin contraseñas.</p>
+
+            <form class="track-form" id="trackForm" autocomplete="off">
+                <label>Folio
+                    <input id="folio" name="folio" placeholder="PC-1001" maxlength="20" autocapitalize="characters" spellcheck="false" required>
+                </label>
+                <label>Últimos 4 dígitos de tu teléfono
+                    <input id="tel" name="tel" placeholder="4567" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required>
+                </label>
+                <button class="btn red" id="trackBtn" type="submit">Ver mi pedido</button>
+            </form>
+
+            <p class="track-error" id="trackError" role="alert" hidden></p>
+            <section class="track-result" id="trackResult" aria-live="polite" hidden></section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="wrap">© PixelCraft, El Laboratorio de la Casa. · <a href="index.html">Volver a la tienda</a></div>
+    </footer>
+    <div id="toast" role="status"></div>
+    <script type="module" src="js/track.js"></script>
+</body>
+</html>

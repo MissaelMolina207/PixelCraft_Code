@@ -30,3 +30,12 @@ Backend: `api/generate.js` (un turno del chat) · `lib/prompts.js` (**aquí se e
 - Diagnóstico sin gastar crédito: `GET /api/generate` (capacidades) y `GET /api/generate?check=1`.
 - Local: el API solo existe con `vercel dev`; con `npm run static` el chat carga pero responde 404.
 - Antes de lanzar: pon el WhatsApp real en `data/site.json` (el actual es un placeholder).
+
+## Rastreo y Admin
+
+- **Público:** `rastreo.html` + `js/track.js` + `api/track.js`. Folio + últimos 4 dígitos del teléfono → timeline de 4 pasos. Solo devuelve la vista pública (`lib/orders.js → publicView`): sin costos, márgenes, notas ni ficha técnica.
+- **Privado:** `admin.html` + `js/admin/*` + `api/admin.js` (un solo router: `?r=orders|products|employees|tasks|stats|init|login|logout|session`). Lógica en `lib/admin/*`.
+- **Datos:** Cloudflare D1 por REST (`lib/db.js`, esquema en `lib/schema.js`). El catálogo vive en D1 y `data/products.json` queda de respaldo.
+- **Primer uso:** configura las variables de `.env.example`, haz Redeploy, entra a `/admin` y pulsa «Inicializar base de datos».
+- **Paqueterías:** `data/carriers.json` (plantillas de enlace de rastreo, edítalas sin tocar código).
+- **Regla de oro:** nunca uses la etiqueta `<header>` dentro de componentes: `components.css` la fija arriba (`position: fixed`).

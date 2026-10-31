@@ -1,7 +1,10 @@
 import { $, fmt, wa } from './utils.js';
 import { store } from './store.js';
 
-const SECTORS = {
+// Los textos del catálogo se editan en /admin: SIEMPRE escapados antes de ir a innerHTML.
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
+export const SECTORS = {
   all: { name: 'Todo el Catálogo', subs: [] },
   textil: {
     name: 'Sector Textil',
@@ -93,17 +96,18 @@ function renderGrid() {
     ? list.map(p => `
         <article class="card pro-card">
           <div class="card-gallery">
-            ${p.img ? `<img src="${p.img}" alt="${p.name}">` : `<div class="thumb">${p.tag || '📦'}</div>`}
+            ${p.img ? `<img src="${esc(p.img)}" alt="${esc(p.name)}">` : `<div class="thumb">${esc(p.tag) || '📦'}</div>`}
           </div>
           <div class="card-body">
-            <h3 style="font-size:1.1rem; margin-bottom: 8px;">${p.name}</h3>
+            <h3 style="font-size:1.1rem; margin-bottom: 8px;">${esc(p.name)}</h3>
+            ${p.specs ? `<p style="font-size: 0.85rem; color: var(--soft); margin: 0 0 10px;">${esc(p.specs)}</p>` : ''}
             <div class="price" style="font-size: 1.25rem; font-weight: bold; color: var(--red); margin-bottom: 12px;">
-              ${fmt(p.price)} <small style="font-size: 0.8rem; color: var(--soft);">${p.unit || 'pieza'}</small>
+              ${fmt(p.price)} <small style="font-size: 0.8rem; color: var(--soft);">${esc(p.unit) || 'pieza'}</small>
             </div>
             <div class="card-actions" style="display: flex; flex-direction: column; gap: 8px;">
-              <button class="btn red" data-add="${p.id}">Comprar muestra directa</button>
+              <button class="btn red" data-add="${esc(p.id)}">Comprar muestra directa</button>
               <a class="btn" target="_blank" rel="noopener" href="${wa(store.site.whatsapp, 'Hola PixelCraft, quiero cotizar modelos personalizados para: ' + p.name)}">Cotizar otros modelos</a>
-              <button class="btn ai-redesign-btn" data-ai-name="${p.name}" style="background: var(--black-2); border: 1px solid var(--line);">✨ Rediseñar con IA</button>
+              <button class="btn ai-redesign-btn" data-ai-name="${esc(p.name)}" style="background: var(--black-2); border: 1px solid var(--line);">✨ Rediseñar con IA</button>
             </div>
           </div>
         </article>

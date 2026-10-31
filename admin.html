@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Admin — PixelCraft</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="css/tokens.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="adm">
+    <!-- NO uses la etiqueta <header> en el admin: components.css la fija arriba (position: fixed). -->
+
+    <section class="adm-login" id="login">
+        <form class="adm-login-card" id="loginForm">
+            <h1>PIXEL <b>CRAFT</b> <small>Admin</small></h1>
+            <p>Acceso privado del taller.</p>
+            <label>Contraseña
+                <input id="pw" type="password" autocomplete="current-password" required>
+            </label>
+            <button class="btn red" type="submit" id="loginBtn">Entrar</button>
+            <p class="adm-error" id="loginErr" role="alert" hidden></p>
+        </form>
+    </section>
+
+    <div class="adm-app" id="app" hidden>
+        <div class="adm-bar">
+            <a class="adm-brand" href="index.html" title="Ver el sitio">PIXEL <b>CRAFT</b> <small>Admin</small></a>
+            <nav class="adm-tabs" id="tabs" aria-label="Secciones del panel">
+                <a href="#panel">Panel</a>
+                <a href="#orders">Órdenes</a>
+                <a href="#board">Tablero</a>
+                <a href="#team">Equipo</a>
+                <a href="#products">Catálogo</a>
+            </nav>
+            <button class="btn" id="logout" type="button">Salir</button>
+        </div>
+        <main class="adm-main" id="view" aria-live="polite"></main>
+    </div>
+
+    <div id="modal"></div>
+    <div id="toast" role="status"></div>
+    <script type="module" src="js/admin/main.js"></script>
+</body>
+</html>

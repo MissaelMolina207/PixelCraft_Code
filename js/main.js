@@ -6,7 +6,9 @@ import { initStudio } from './studio.js';
 import { initLead } from './lead.js';
 
 try {
-    [store.site, store.products] = await Promise.all([getJSON('data/site.json'), getJSON('data/products.json')]);
+    // Catálogo: /api/products (editable en /admin, con caché de borde). Sin API (npm run static) o si falla → data/products.json.
+    const loadProducts = () => getJSON('/api/products').catch(() => getJSON('data/products.json'));
+    [store.site, store.products] = await Promise.all([getJSON('data/site.json'), loadProducts()]);
 } catch {
     document.body.insertAdjacentHTML('afterbegin', '<p style="padding:90px 20px">No cargaron los datos. Abre el sitio con un servidor (npm run static), no con doble clic.</p>');
     throw new Error('data');
@@ -18,10 +20,12 @@ $('#slotsTxt').textContent = `${slots.total - slots.used} de ${slots.total} disp
 $('#slotsBar').style.width = slots.used / slots.total * 100 + '%';
 
 // Inicializar componentes del sitio
-initCart(); 
-initCatalog(); 
-initStudio(); 
-initLead();
+// Cada módulo aislado: si el Estudio IA falla, el carrusel, el carrito y el formulario siguen vivos.
+const safe = (name, fn) => { try { fn(); } catch (e) { console.error(`[${name}]`, e); } };
+safe('cart', initCart);
+safe('catalog', initCatalog);
+safe('studio', initStudio);
+safe('lead', initLead);
 
 // Inicializador del Carrusel Hero estilo Mercado Libre (Seguro y sincronizado)
 function initHeroCarousel() {

@@ -1,16 +1,13 @@
 // POST /api/checkout {items:[id,...]} -> {url} de Stripe Checkout. Precios SIEMPRE del servidor.
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
-
-const load = f => JSON.parse(readFileSync(join(process.cwd(), 'data', f), 'utf8'));
+import { loadCatalog, readData } from '../lib/catalog.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) return res.status(501).json({ error: 'Stripe no configurado' });
 
-  const catalog = Object.fromEntries(load('products.json').map(p => [p.id, p]));
-  const { currency } = load('site.json');
+  const catalog = Object.fromEntries((await loadCatalog()).products.map(p => [p.id, p])); // precios editables en /admin
+  const { currency } = readData('site.json');
   const counts = {};
   for (const id of Array.isArray(req.body?.items) ? req.body.items : []) if (catalog[id]) counts[id] = (counts[id] || 0) + 1;
   const ids = Object.keys(counts);
@@ -23,7 +20,7 @@ export default async function handler(req, res) {
   ids.forEach((id, i) => {
     form.set(`line_items[${i}][quantity]`, counts[id]);
     form.set(`line_items[${i}][price_data][currency]`, currency);
-    form.set(`line_items[${i}][price_data][unit_amount]`, catalog[id].price * 100);
+    form.set(`line_items[${i}][price_data][unit_amount]`, Math.round(catalog[id].price * 100));
     form.set(`line_items[${i}][price_data][product_data][name]`, catalog[id].name);
   });
   const r = await fetch('https://api.stripe.com/v1/checkout/sessions', {

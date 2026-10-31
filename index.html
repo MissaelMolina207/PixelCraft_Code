@@ -21,6 +21,7 @@
                 <a href="#catalogo">Catálogo</a>
                 <a href="#estudio">Estudio IA</a>
                 <a href="#proceso">Proceso</a>
+                <a href="rastreo.html">Rastreo</a>
                 <a href="#contacto">Contacto</a>
                 <a href="#ayuda">Ayuda</a>
             </nav>
@@ -161,23 +162,15 @@
                 <p class="note" style="margin-top:16px">Precios de muestra en MXN. En volumen el costo por pieza baja: cotiza.</p>
             </div>
         </section>
-    <!-- ESTUDIO IA -->
+
+        <!-- ESTUDIO IA -->
         <section id="estudio">
             <div class="wrap">
                 <h2>Platica tu idea. Míralo hecho realidad.</h2>
                 <p class="studio-lead">Escribe lo que imaginas, sube tu arte si ya lo tienes y ajústalo hasta que te encante. Cuando estés listo, lo cotizamos por WhatsApp.</p>
 
                 <div class="chat" id="chat">
-                    <header class="chat-head">
-                        <div class="chat-title">
-                            <span class="chat-dot" aria-hidden="true"></span>
-                            <strong>Estudio IA</strong>
-                            <small id="chatBadge">Borradores gratis</small>
-                        </div>
-                        <button class="btn" id="chatReset" type="button">Nueva idea</button>
-                    </header>
-
-                    <div class="chat-log" id="chatLog" role="log" aria-live="polite" aria-relevant="additions"></div>
+                <div class="chat-log" id="chatLog" role="log" aria-live="polite" aria-relevant="additions"></div>
 
                     <div class="chat-cta" id="chatCta" hidden>
                         <div class="chat-cta-text">
@@ -197,7 +190,10 @@
                             <textarea id="chatInput" rows="1" maxlength="300" aria-label="Describe tu idea" placeholder="Describe tu idea. Ej: playera con un hot dog retro"></textarea>
                             <button class="btn red chat-send" id="chatSend" type="submit">Enviar</button>
                         </div>
-                        <small class="chat-hint">Enter envía · Shift+Enter nueva línea · Puedes pegar o arrastrar tu imagen aquí.</small>
+                        <div class="chat-foot">
+                            <small class="chat-hint">Enter envía · Shift+Enter nueva línea · Puedes pegar o arrastrar tu imagen aquí.</small>
+                            <button class="chat-reset" id="chatReset" type="button">Nueva idea</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -276,7 +272,7 @@
     </main>
     
     <footer>
-        <div class="wrap">© PixelCraft, El Laboratorio de la Casa. Hecho con precisión y poca paciencia.</div>
+        <div class="wrap">© PixelCraft, El Laboratorio de la Casa. Hecho con precisión y poca paciencia. · <a href="rastreo.html">Rastrea tu pedido</a></div>
     </footer>
 
     <aside id="cart" aria-label="Carrito">

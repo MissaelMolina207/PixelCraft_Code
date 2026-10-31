@@ -21,9 +21,10 @@ const mimeOf = url => /^data:(image\/[a-z]+);/.exec(url)?.[1] || 'image/png';
  * @param h  { onSend(text), onFiles(FileList), onRemoveRef(i), onReset() }
  */
 export function createChatUI(h) {
-  const root = $('#chat'), log = $('#chatLog'), form = $('#chatForm'), input = $('#chatInput');
+  const log = $('#chatLog'), form = $('#chatForm'), input = $('#chatInput');
+  const root = $('#chat') || log.parentElement; // el contenedor es decorativo: sin él el chat sigue funcionando
   const tray = $('#chatTray'), file = $('#chatFile'), send = $('#chatSend'), attach = $('#chatAttach');
-  const cta = $('#chatCta'), quote = $('#chatQuote'), ctaNote = $('#ctaNote'), badge = $('#chatBadge');
+  const cta = $('#chatCta'), quote = $('#chatQuote'), ctaNote = $('#ctaNote'), badge = $('#chatBadge'); // badge y reset son opcionales
 
   const toEnd = () => log.scrollTo({ top: log.scrollHeight });
   const push = node => { log.append(node); toEnd(); return node; };
@@ -51,7 +52,7 @@ export function createChatUI(h) {
   });
   attach.addEventListener('click', () => file.click());
   file.addEventListener('change', () => { h.onFiles([...file.files]); file.value = ''; });
-  $('#chatReset').addEventListener('click', () => h.onReset());
+  $('#chatReset')?.addEventListener('click', () => h.onReset());
 
   // Arrastrar y soltar sobre todo el chat
   ['dragenter', 'dragover'].forEach(ev => root.addEventListener(ev, e => { e.preventDefault(); root.classList.add('drag'); }));
@@ -62,7 +63,7 @@ export function createChatUI(h) {
   return {
     focus: () => input.focus({ preventScroll: true }),
     clear: () => { log.replaceChildren(); },
-    setBadge: text => { badge.textContent = text; },
+    setBadge: text => { if (badge) badge.textContent = text; },
     setBusy(on) { send.disabled = input.disabled = on; log.setAttribute('aria-busy', String(on)); },
     setAttachEnabled(on) { attach.hidden = !on; },
     disable(placeholder) { input.disabled = send.disabled = attach.disabled = true; input.placeholder = placeholder; },
