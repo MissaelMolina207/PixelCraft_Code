@@ -26,6 +26,7 @@ getJSON('data/site.json').then(s => { whatsapp = s.whatsapp; }).catch(() => {});
 function showError(msg) { err.textContent = msg; err.hidden = false; out.hidden = true; }
 
 function statusBanner(o) {
+  if (o.quote) return el('div', { class: 'track-status' }, el('strong', {}, 'Cotización registrada'), el('small', {}, 'Cuando confirmemos tu anticipo por WhatsApp, empieza la producción y aquí verás cada avance.'));
   if (o.delivered) return el('div', { class: 'track-status done' }, el('strong', {}, '¡Pedido entregado!'), el('small', {}, o.deliveredAt ? `Entregado el ${fmtDate(o.deliveredAt)}. Gracias por confiar en PixelCraft.` : 'Gracias por confiar en PixelCraft.'));
   if (o.stage === 'shipping') return el('div', { class: 'track-status' }, el('strong', {}, 'Tu pedido va en camino'), el('small', {}, o.shipping?.eta ? `Llegada estimada: ${fmtDate(o.shipping.eta)}` : 'Usa la guía para ver el avance con la paquetería.'));
   const cur = o.steps.find(s => s.state === 'current');

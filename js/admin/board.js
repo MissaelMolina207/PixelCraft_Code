@@ -1,17 +1,19 @@
 // js/admin/board.js — Tablero de producción (Kanban). Mover tarjetas = cambiar etapa (con evento en el historial).
 // Accesible: cada tarjeta tiene botones ◀ ▶ además de arrastrar y soltar.
 import { api } from './api.js';
-import { el, money, fdate, STAGES, toast, badge } from './ui.js';
-import { openOrder } from './orders.js';
+import { el, money, fdate, STAGES, CHANNELS, toast, badge, select, channelBadge, channelClass } from './ui.js';
+import { openOrder, CHANNEL_FILTERS } from './orders.js';
 
 export async function renderBoard(root) {
   const board = el('div', { class: 'adm-board' });
-  root.replaceChildren(el('div', { class: 'adm-toolbar' }, el('h1', {}, 'Tablero de producción'),
+  const chSel = select(CHANNEL_FILTERS, '', { 'aria-label': 'Filtrar por canal' });
+  chSel.addEventListener('change', () => load().catch(e => toast(e.message)));
+  root.replaceChildren(el('div', { class: 'adm-toolbar' }, el('h1', {}, 'Tablero de producción'), chSel,
     el('button', { class: 'btn red', type: 'button', onclick: () => openOrder(null, { onSaved: load }) }, '+ Nueva orden')), board);
 
   let orders = [];
   async function load() {
-    orders = (await api('orders', { query: { stage: '' } })).orders;
+    orders = (await api('orders', { query: { stage: '', channel: chSel.value } })).orders;
     draw();
   }
 
@@ -25,17 +27,17 @@ export async function renderBoard(root) {
 
   function card(o, i) {
     const k = STAGES.findIndex(s => s.key === o.stage);
-    return el('article', { class: 'adm-card', draggable: 'true', tabindex: 0,
+    return el('article', { class: `adm-card ${channelClass(o.channel)}-card`, draggable: 'true', tabindex: 0,
       ondragstart: e => { e.dataTransfer.setData('text/plain', o.folio); e.dataTransfer.effectAllowed = 'move'; e.currentTarget.classList.add('drag'); },
       ondragend: e => e.currentTarget.classList.remove('drag'),
       onkeydown: e => { if (e.key === 'Enter') openOrder(o.folio, { onSaved: load }); } },
       el('div', { class: 'adm-card-top', onclick: () => openOrder(o.folio, { onSaved: load }) },
-        el('span', { class: 'mono' }, o.folio), o.overdue ? badge('vencida', 'neg') : null),
+        el('span', { class: 'mono' }, o.folio), o.overdue ? badge('vencida', 'neg') : channelBadge(o.channel)),
       el('strong', { onclick: () => openOrder(o.folio, { onSaved: load }) }, o.customer_name),
       el('p', {}, o.title),
       el('div', { class: 'adm-card-meta' },
         el('span', {}, `📅 ${fdate(o.due_date)}`),
-        o.balance > 0 ? badge(`Por cobrar ${money(o.balance)}`, 'low') : badge('Pagada', 'good'),
+        o.stage === 'quote' ? badge(`Cotiza ${money(o.price)}`) : o.balance > 0 ? badge(`Por cobrar ${money(o.balance)}`, 'low') : badge('Pagada', 'good'),
         o.openTasks ? badge(`${o.openTasks} tarea${o.openTasks > 1 ? 's' : ''}`) : null),
       o.assignees.length ? el('small', {}, '👷 ' + o.assignees.join(', ')) : null,
       el('div', { class: 'adm-card-move' },

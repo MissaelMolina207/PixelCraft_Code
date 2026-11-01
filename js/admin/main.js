@@ -6,8 +6,10 @@ import { renderOrders } from './orders.js';
 import { renderBoard } from './board.js';
 import { renderTeam } from './team.js';
 import { renderProducts } from './products.js';
+import { renderCalc } from './calc.js';
+import { renderChannels } from './channels.js';
 
-const VIEWS = { panel: renderDashboard, orders: renderOrders, board: renderBoard, team: renderTeam, products: renderProducts };
+const VIEWS = { panel: renderDashboard, orders: renderOrders, board: renderBoard, calc: renderCalc, channels: renderChannels, team: renderTeam, products: renderProducts };
 const login = $('#login'), app = $('#app'), view = $('#view');
 
 function show(authed, msg = '') {

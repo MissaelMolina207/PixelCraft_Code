@@ -1,8 +1,8 @@
 // /api/admin?r=<recurso> — Router del panel privado (una sola función: Vercel Hobby limita cuántas puedes desplegar).
-//   r=login (POST) · logout (POST) · session (GET) · init (POST) · stats · orders · products · employees · tasks
+//   r=login (POST) · logout (POST) · session (GET) · init (POST) · stats · orders · products · employees · tasks · inventory · listings · settings
 // Todo lo demás exige sesión (cookie firmada) y, en escrituras, la cabecera X-Requested-With: pc-admin.
-import { dbReady, DbError, batch } from '../lib/db.js';
-import { SCHEMA } from '../lib/schema.js';
+import { dbReady, DbError } from '../lib/db.js';
+import { initDatabase } from '../lib/schema.js';
 import { authConfigured, checkPassword, sessionCookie, clearCookie, isAuthed, csrfOk } from '../lib/auth.js';
 import { limited, failures, clientIp } from '../lib/limits.js';
 import { HttpError } from '../lib/admin/http.js';
@@ -11,8 +11,13 @@ import { ordersHandler } from '../lib/admin/orders.js';
 import { employeesHandler, tasksHandler } from '../lib/admin/team.js';
 import { productsHandler, seedProducts } from '../lib/admin/products.js';
 import { statsHandler } from '../lib/admin/stats.js';
+import { inventoryHandler, listingsHandler } from '../lib/admin/channels.js';
+import { settingsHandler } from '../lib/admin/settings.js';
 
-const ROUTES = { orders: ordersHandler, employees: employeesHandler, tasks: tasksHandler, products: productsHandler, stats: statsHandler };
+const ROUTES = {
+  orders: ordersHandler, employees: employeesHandler, tasks: tasksHandler, products: productsHandler, stats: statsHandler,
+  inventory: inventoryHandler, listings: listingsHandler, settings: settingsHandler
+};
 const sleep = ms => new Promise(ok => setTimeout(ok, ms));
 
 export default async function handler(req, res) {
@@ -55,7 +60,7 @@ export default async function handler(req, res) {
   try {
     if (r === 'init') {
       if (req.method !== 'POST') return send(405, { error: 'Método no permitido' });
-      await batch(SCHEMA);
+      await initDatabase(); // crea tablas, migra columnas nuevas y crea índices (idempotente)
       return send(200, { ok: true, seeded: await seedProducts() });
     }
     const fn = ROUTES[r];

@@ -39,3 +39,14 @@ Backend: `api/generate.js` (un turno del chat) · `lib/prompts.js` (**aquí se e
 - **Primer uso:** configura las variables de `.env.example`, haz Redeploy, entra a `/admin` y pulsa «Inicializar base de datos».
 - **Paqueterías:** `data/carriers.json` (plantillas de enlace de rastreo, edítalas sin tocar código).
 - **Regla de oro:** nunca uses la etiqueta `<header>` dentro de componentes: `components.css` la fija arriba (`position: fixed`).
+
+## Multicanal, calculadoras y ayuda
+
+- **Etapas del taller:** Cotizada → Por asignar → En taller → Control de calidad → Enviado → Entregada. El cliente ve 4 pasos (`lib/orders.js`); una *Cotizada* aún no es venta (no cuenta en ventas ni descuenta inventario).
+- **Canales:** WhatsApp / Web / Estudio IA / Presencial y marketplaces (Mercado Libre, Amazon, Facebook). La orden guarda `channel`, `ext_ref` (n.º de orden externo, único por canal) y `fee` (comisión del canal, se resta de la utilidad).
+- **Inventario:** libro de movimientos (`stock_moves`); stock = suma. Las partidas con `sku` descuentan al aprobar y devuelven al cotizar/borrar. Productos sin movimientos = «sin control».
+- **Publicaciones:** `listings` mapea producto ↔ marketplace con reserva (`buffer`). Publicas = stock − reserva.
+- **n8n:** `POST /api/channels` (entrada de ventas, idempotente) y `GET /api/channels?op=stock` (stock a publicar). Auth: `Authorization: Bearer <INTAKE_TOKEN>`.
+- **Calculadoras:** fórmulas puras en `lib/calc.js` (se prueban en Node), UI en `js/admin/calc.js`, valores base en la tabla `settings`.
+- **Ayuda pública:** `#ayuda` se alimenta de `data/help.json`; los mínimos salen del catálogo.
+- **Actualizar una base ya inicializada:** entra a `/admin` y pulsa «Inicializar base de datos» (migra columnas nuevas, idempotente).

@@ -1,6 +1,6 @@
 // js/admin/dashboard.js — Panel: dinero, margen y qué se está quemando hoy.
 import { api } from './api.js';
-import { el, money, pct, fdate, STAGES, badge } from './ui.js';
+import { el, money, pct, fdate, STAGES, badge, channelBadge } from './ui.js';
 import { openOrder } from './orders.js';
 
 const kpi = (label, value, sub, cls = '') => el('div', { class: `adm-kpi ${cls}`.trim() }, el('small', {}, label), el('strong', {}, value), sub ? el('span', {}, sub) : null);
@@ -17,10 +17,14 @@ export async function renderDashboard(root) {
       kpi('Margen del mes', money(m.margin), pct(m.marginPct), m.margin < 0 ? 'neg' : m.marginPct < 20 && m.sales > 0 ? 'low' : 'good'),
       kpi('Por cobrar', money(t.outstanding), 'todas las órdenes', t.outstanding > 0 ? 'low' : 'good'),
       kpi('Vencidas', String(s.overdue), 'fecha de entrega pasada', s.overdue ? 'neg' : 'good'),
-      kpi('Tareas abiertas', String(s.openTasks), 'en el taller')),
+      kpi('Cotizaciones abiertas', String(s.quotes.n), s.quotes.n ? `${money(s.quotes.value)} en el pipeline` : 'sin pendientes'),
+      kpi('Tareas abiertas', String(s.openTasks), 'en el taller'),
+      s.outOfStock ? kpi('Sin stock', String(s.outOfStock), 'productos en 0 o menos', 'neg') : null),
     el('div', { class: 'adm-two' },
       el('div', { class: 'adm-panel' }, el('h2', {}, 'Órdenes por etapa'),
         el('ul', { class: 'adm-stagelist' }, STAGES.map(st => el('li', {}, badge(st.short, `st-${st.key}`), el('strong', {}, String(s.byStage[st.key] || 0)))))),
+      el('div', { class: 'adm-panel' }, el('h2', {}, 'Ventas por canal'),
+        s.byChannel.length ? el('ul', { class: 'adm-stagelist' }, s.byChannel.map(c => el('li', {}, channelBadge(c.channel), el('span', {}, el('strong', {}, money(c.sales)), ` · utilidad ${money(c.margin)}`)))) : el('p', { class: 'adm-empty' }, 'Sin ventas todavía.')),
       el('div', { class: 'adm-panel' }, el('h2', {}, 'Próximas entregas'),
         upcoming.length ? el('ul', { class: 'adm-list' }, upcoming.map(o => el('li', { class: 'clickable', tabindex: 0, onclick: () => openOrder(o.folio, { onSaved: () => renderDashboard(root) }), onkeydown: e => { if (e.key === 'Enter') openOrder(o.folio, { onSaved: () => renderDashboard(root) }); } },
           el('div', {}, el('strong', {}, `${o.folio} · ${o.customer_name}`), el('small', {}, o.title)),

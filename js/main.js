@@ -4,6 +4,7 @@ import { initCatalog } from './catalog.js';
 import { initCart } from './cart.js';
 import { initStudio } from './studio.js';
 import { initLead } from './lead.js';
+import { initHelp } from './help.js';
 
 try {
     // Catálogo: /api/products (editable en /admin, con caché de borde). Sin API (npm run static) o si falla → data/products.json.
@@ -26,6 +27,7 @@ safe('cart', initCart);
 safe('catalog', initCatalog);
 safe('studio', initStudio);
 safe('lead', initLead);
+safe('help', () => initHelp().catch(e => console.error('[help]', e)));
 
 // Inicializador del Carrusel Hero estilo Mercado Libre (Seguro y sincronizado)
 function initHeroCarousel() {

@@ -138,7 +138,7 @@ tr.clickable:hover, tr.clickable:focus-visible { background: rgba(247, 248, 251,
 .fld.check input { width: auto; }
 .fld-label { display: block; margin-bottom: 6px; font-size: 0.82rem; color: var(--soft); }
 .adm-items { display: grid; gap: 8px; margin-bottom: 8px; }
-.adm-item { display: grid; grid-template-columns: 2fr 72px 2fr auto; gap: 8px; align-items: center; }
+.adm-item { display: grid; grid-template-columns: 2fr 72px 1.4fr 1.6fr auto; gap: 8px; align-items: center; }
 .adm-margin { grid-column: 1 / -1; display: flex; gap: 28px; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); }
 .adm-margin small { display: block; color: var(--soft); }
 .adm-margin strong { font-size: 1.3rem; }
@@ -173,10 +173,63 @@ tr.clickable:hover, tr.clickable:focus-visible { background: rgba(247, 248, 251,
   .adm-two { grid-template-columns: 1fr; }
   .adm-grid { grid-template-columns: 1fr; }
   .adm-item { grid-template-columns: 1fr 64px auto; }
-  .adm-item input[data-k="specs"] { grid-column: 1 / 3; }
+  .adm-item input[data-k="specs"], .adm-item select { grid-column: 1 / -1; }
   .adm-task, .adm-task-new { grid-template-columns: 1fr 1fr; }
   .adm-task-title { grid-column: 1 / -1; order: -1; }
   .adm-inline { grid-template-columns: 1fr; }
   .adm-bar { padding: 8px 12px; gap: 8px; }
   .adm-brand small { display: none; }
+}
+
+/* ---------- Canales: color = de dónde viene la venta (se ve en lista, tablero y panel) ---------- */
+.adm-ch { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px 2px 3px; border-radius: 999px; border: 1px solid var(--line); font-size: 0.74rem; font-weight: 600; white-space: nowrap; }
+.adm-ch b { padding: 1px 6px; border-radius: 999px; font-size: 0.66rem; letter-spacing: 0.04em; color: #111; }
+.adm-ch.ch-own b { background: #e5e7eb; }
+.adm-ch.ch-ml { border-color: rgba(255, 230, 0, 0.55); } .adm-ch.ch-ml b { background: #ffe600; }
+.adm-ch.ch-amz { border-color: rgba(255, 153, 0, 0.55); } .adm-ch.ch-amz b { background: #ff9900; }
+.adm-ch.ch-fb { border-color: rgba(24, 119, 242, 0.65); } .adm-ch.ch-fb b { background: #1877f2; color: #fff; }
+tr.ch-ml-row td:first-child { box-shadow: inset 3px 0 0 #ffe600; }
+tr.ch-amz-row td:first-child { box-shadow: inset 3px 0 0 #ff9900; }
+tr.ch-fb-row td:first-child { box-shadow: inset 3px 0 0 #1877f2; }
+.adm-card.ch-ml-card { border-left: 3px solid #ffe600; }
+.adm-card.ch-amz-card { border-left: 3px solid #ff9900; }
+.adm-card.ch-fb-card { border-left: 3px solid #1877f2; }
+.adm-col.st-quote { border-top-color: #94a3b8; }
+.st-quote { border-color: #94a3b8; color: #cbd5e1; }
+.adm-group.mk { border-color: rgba(255, 230, 0, 0.3); }
+.adm-kpis.tight { grid-template-columns: repeat(4, 1fr); margin-bottom: 8px; }
+.adm-kpis.tight .adm-kpi { padding: 10px 12px; } .adm-kpis.tight .adm-kpi strong { font-size: 1.1rem; }
+
+/* ---------- Calculadoras ---------- */
+.adm-subtabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.adm-subtabs .btn[aria-selected="true"] { background: rgba(205, 0, 0, 0.25); border-color: var(--red); }
+.adm-calc { display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px; align-items: start; }
+.adm-calc-side { position: sticky; top: 72px; }
+.adm-calc-out { display: grid; gap: 6px; }
+.adm-calc-row { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px dashed var(--line); font-size: 0.9rem; color: var(--soft); }
+.adm-calc-row strong { color: var(--white); text-align: right; }
+.adm-calc-row.sum { color: var(--white); border-bottom: 1px solid var(--line); }
+.adm-calc-big { display: grid; gap: 2px; margin-top: 8px; padding: 14px; border: 1px solid var(--line); border-radius: 10px; }
+.adm-calc-big small, .adm-calc-big span { color: var(--soft); font-size: 0.8rem; }
+.adm-calc-big strong { font-size: 2rem; line-height: 1.15; }
+.adm-calc-big.good { border-color: rgba(74, 222, 128, 0.5); background: rgba(74, 222, 128, 0.06); }
+.adm-calc-big.good strong { color: #4ade80; }
+
+/* ---------- Matriz de inventario ---------- */
+.adm-table-wrap.flat { border: 0; background: none; }
+.adm-mini { min-height: 28px !important; padding: 0 10px !important; font-size: 0.75rem !important; margin-left: 8px; white-space: nowrap; }
+.adm-cellbtn { display: grid; gap: 2px; justify-items: start; text-align: left; width: 100%; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--white); cursor: pointer; }
+.adm-cellbtn:hover { background: rgba(247, 248, 251, 0.06); }
+.adm-cellbtn small { color: var(--soft); font-size: 0.72rem; }
+.adm-steps { display: grid; gap: 10px; padding-left: 20px; }
+.adm-steps code, .adm-panel code { font: 0.8rem ui-monospace, Menlo, Consolas, monospace; background: var(--black-2); padding: 1px 6px; border-radius: 4px; overflow-wrap: anywhere; }
+.adm-code { margin: 8px 0 0; padding: 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--black-2); font: 0.78rem/1.5 ui-monospace, Menlo, Consolas, monospace; overflow-x: auto; }
+.adm-panel + .adm-panel { margin-top: 16px; }
+.adm-two > .adm-panel + .adm-panel, .adm-calc > .adm-panel + .adm-panel { margin-top: 0; } /* en rejillas, el espacio lo da el gap */
+.adm-two + .adm-panel { margin-top: 16px; }
+
+@media (max-width: 860px) {
+  .adm-calc { grid-template-columns: 1fr; }
+  .adm-calc-side { position: static; }
+  .adm-kpis.tight { grid-template-columns: 1fr 1fr; }
 }

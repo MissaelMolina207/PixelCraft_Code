@@ -1,0 +1,45 @@
+{
+  "_nota": "Contenido de #ayuda. Edítalo sin tocar código. Cada item: {q, a}; en 'a' un salto de línea (\\n) es un párrafo nuevo. {auto:'minimums'} genera los mínimos desde el catálogo (productos con unidad «desde N pzs»). No hay cifras de días de entrega: agrégalas SOLO cuando las tengas confirmadas con tus proveedores.",
+  "groups": [
+    {
+      "id": "estudio", "title": "Estudio IA",
+      "items": [
+        { "q": "¿Cómo uso el Estudio IA?", "a": "1. Escribe tu idea en español: producto, estilo, colores y el texto exacto entre comillas.\n2. Si ya tienes arte, adjúntalo con el clip, pégalo o arrástralo (hasta 2 imágenes, PNG, JPG o WebP).\n3. Ajusta con mensajes cortos: «hazlo en rojo», «más minimalista», «ponlo en una sudadera».\n4. Cuando te guste, pulsa «Cotizar por WhatsApp»." },
+        { "q": "¿El mockup es el resultado final?", "a": "No. Es una vista previa generada con IA para que decidas. Antes de producir revisamos tu arte y lo afinamos contigo (la revisión de archivo es gratis)." },
+        { "q": "La IA deformó mi texto o mi logo", "a": "Pasa: los generadores de imágenes a veces cambian letras. Escribe el texto exacto entre comillas y, si necesitas tu tipografía o tu logo al detalle, adjunta tu arte original (de preferencia vectorial). Lo corregimos en la revisión." },
+        { "q": "¿Puedo pedir personajes o marcas registradas?", "a": "Solo imprimimos arte que sea tuyo o que tengas autorización de usar. Si no estás seguro, pregúntanos antes de cotizar." }
+      ]
+    },
+    {
+      "id": "cotizar", "title": "Cotizar y pagar",
+      "items": [
+        { "q": "¿Cómo cotizo?", "a": "Desde el Estudio IA o desde cualquier botón de WhatsApp del sitio. Te respondemos con precio, cantidades y tiempo estimado para tu pieza." },
+        { "q": "¿Cómo confirmo mi pedido?", "a": "Con un anticipo: te indicamos el monto y cómo pagarlo por WhatsApp. Al confirmarlo te damos tu folio (por ejemplo PC-1001) y empieza la producción." },
+        { "q": "¿Cómo pago en el sitio?", "a": "Las muestras y artículos del catálogo se pagan con Stripe (pago cifrado). Para pedidos cotizados te indicamos las opciones por WhatsApp." },
+        { "q": "¿Cómo sigo mi pedido?", "a": "En «Rastreo» escribe tu folio y los últimos 4 dígitos del teléfono con el que cotizaste. Verás en qué etapa va: cotización aprobada, en producción, control de calidad y en camino con su guía de paquetería." }
+      ]
+    },
+    {
+      "id": "tiempos", "title": "Tiempos y envíos",
+      "items": [
+        { "q": "¿Cuánto tarda mi pedido?", "a": "Depende del producto, la cantidad y la carga del taller (arriba ves los cupos de producción de la semana). Te damos la fecha exacta al cotizar y la ves en tu rastreo." },
+        { "q": "¿Cómo se envía?", "a": "Enviamos a todo México por paquetería. Cuando tu pedido sale te damos la guía y la ves en tu rastreo, con enlace directo cuando la paquetería lo permite." },
+        { "q": "¿Puedo pedir una muestra antes de producir?", "a": "Sí: hay muestra desde 1 pieza. Es la forma más segura de aprobar color, tamaño y acabado antes de la tirada." }
+      ]
+    },
+    {
+      "id": "minimos", "title": "Mínimos de producción",
+      "items": [ { "auto": "minimums" } ]
+    },
+    {
+      "id": "disenadores", "title": "Para diseñadores",
+      "items": [
+        { "q": "¿Qué archivos aceptan?", "a": "Lo ideal es vectorial (AI, SVG, PDF o EPS) con los textos convertidos a curvas. Si es imagen: PNG a 300 dpi, al tamaño final de impresión y con fondo transparente." },
+        { "q": "Serigrafía y textil", "a": "Separa el arte por tinta (una capa por color) y dinos cuántas tintas lleva: define el costo. Evita degradados y sombras suaves; usa sólidos o tramas. Los detalles y líneas muy finos pueden perderse en la malla: los evaluamos en la revisión." },
+        { "q": "Impresión 3D", "a": "Envía STL, 3MF o STEP en milímetros. Como referencia general: paredes de al menos 1.2 mm y 0.2 a 0.3 mm de holgura entre piezas que encajan. Orienta la pieza pensando en usar pocos soportes." },
+        { "q": "Corte láser y grabado", "a": "Vectores con una capa por operación (corte y grabado por separado). Para corte, solo trazos sin relleno; para grabado, indica profundidad o contraste deseado." },
+        { "q": "¿Y si mi archivo no cumple?", "a": "No pasa nada: la revisión de archivo es gratis. Te decimos qué ajustar o lo preparamos por ti. Estas son referencias generales; confirmamos lo que aplica a tu pieza al revisarla." }
+      ]
+    }
+  ]
+}

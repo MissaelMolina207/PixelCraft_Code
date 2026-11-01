@@ -14,11 +14,13 @@ export const el = (tag, props = {}, ...kids) => {
   return n;
 };
 
+/** Etapas del taller. `short` = columna del tablero; `label` = selector del formulario. El cliente ve otros textos (lib/orders.js). */
 export const STAGES = [
-  { key: 'approved', label: 'Cotización aprobada', short: 'Aprobada' },
-  { key: 'production', label: 'En producción con proveedor', short: 'En producción' },
-  { key: 'quality', label: 'Control de calidad y empaque', short: 'Calidad y empaque' },
-  { key: 'shipping', label: 'En camino con paquetería', short: 'En camino' },
+  { key: 'quote', label: 'Cotización (sin anticipo todavía)', short: 'Cotizada' },
+  { key: 'approved', label: 'Aprobada · por asignar', short: 'Por asignar' },
+  { key: 'production', label: 'En taller / con proveedor', short: 'En taller' },
+  { key: 'quality', label: 'Control de calidad y empaque', short: 'Control de calidad' },
+  { key: 'shipping', label: 'Enviada · en camino con paquetería', short: 'Enviado' },
   { key: 'delivered', label: 'Entregada', short: 'Entregada' }
 ];
 export const stageLabel = k => STAGES.find(s => s.key === k)?.short || k;
@@ -92,3 +94,12 @@ export function confirmBox(message, { ok = 'Confirmar', danger = false } = {}) {
 }
 
 export const badge = (text, cls = '') => el('span', { class: `adm-badge ${cls}`.trim() }, text);
+
+// ---------- Canales de venta ----------
+export const MARKETPLACES = ['Mercado Libre', 'Amazon', 'Facebook Marketplace'];
+export const CHANNELS = ['WhatsApp', 'Estudio IA', 'Web', 'Presencial', ...MARKETPLACES, 'Otro'];
+export const isMarketplace = c => MARKETPLACES.includes(c);
+const CH = { 'Mercado Libre': ['ch-ml', 'ML'], Amazon: ['ch-amz', 'AMZ'], 'Facebook Marketplace': ['ch-fb', 'FB'], WhatsApp: ['ch-own', 'WA'], Web: ['ch-own', 'WEB'], 'Estudio IA': ['ch-own', 'IA'] };
+export const channelClass = c => (CH[c] || ['ch-own'])[0];
+/** Insignia de canal: color + sigla. Es lo que distingue de un vistazo tienda propia vs marketplace. */
+export const channelBadge = c => el('span', { class: `adm-ch ${channelClass(c)}` }, el('b', {}, (CH[c] || [, '•'])[1]), c);

@@ -1,0 +1,106 @@
+/* css/help.css — Sección #ayuda (autoservicio). Solo clases .help-* */
+#ayuda .help-lead {
+  color: var(--soft);
+  margin: -8px 0 20px;
+}
+.help-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.help-tab {
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--white);
+  font: 500 0.9rem system-ui, sans-serif;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.help-tab:hover {
+  background: rgba(247, 248, 251, 0.08);
+}
+.help-tab[aria-selected="true"] {
+  background: rgba(205, 0, 0, 0.25);
+  border-color: var(--red);
+}
+.help-group {
+  display: grid;
+  gap: 10px;
+  max-width: 860px;
+}
+.help-item {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  overflow: hidden;
+}
+.help-q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+.help-q::-webkit-details-marker {
+  display: none;
+}
+summary.help-q::after {
+  content: "+";
+  flex: none;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--soft);
+  transition: transform 0.15s;
+}
+details[open] > summary.help-q::after {
+  content: "–";
+  color: var(--white);
+  border-color: var(--red);
+}
+.help-q.static {
+  cursor: default;
+}
+.help-item summary:focus-visible {
+  outline: 2px solid var(--red-hot);
+  outline-offset: -2px;
+}
+.help-a {
+  padding: 0 18px 16px;
+  color: var(--soft);
+}
+.help-a p {
+  margin: 0 0 8px;
+  max-width: none;
+}
+.help-min {
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+.help-min li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--line);
+}
+.help-min b {
+  color: var(--white);
+  white-space: nowrap;
+}
+.help-cta {
+  margin-top: 22px;
+}
