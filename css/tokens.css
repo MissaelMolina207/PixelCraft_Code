@@ -1,15 +1,62 @@
+/* css/tokens.css — Sistema de diseño. UNA sola fuente de color para claro y oscuro.
+ *
+ * Cómo funciona (versión junior):
+ *   1. `color-scheme: light dark` le dice al navegador "soporto ambos". Por defecto sigue al sistema operativo.
+ *   2. light-dark(claro, oscuro) devuelve un valor u otro según el esquema activo. Escribes cada color UNA vez.
+ *   3. theme.js pone data-theme="light" o "dark" en <html> cuando el usuario elige a mano; eso fuerza color-scheme.
+ *      Sin data-theme = "Sistema".
+ * Regla: en el CSS NUNCA escribas un color suelto (#fff, rgba(...)); usa estos tokens. Si falta uno, agrégalo AQUÍ.
+ * Contrastes verificados por escáner WCAG (texto normal ≥ 4.5:1) en ambos temas.
+ */
 :root {
-    --black: #090909;
-    --black-2: #030407;
-    --white: #f7f8fb;
-    --soft: rgba(247, 248, 251, 0.78);
-    --red: #cd0000;
-    --red-hot: #ff0000;
-    --red-dark: #580000;
-    --line: rgba(247, 248, 251, 0.12);
-    --card: #111214;
-    color-scheme: dark;
+    color-scheme: light dark;
+
+    /* ---------- Superficies y texto ---------- */
+    --bg:        light-dark(#f2f3f5, #090909); /* fondo de página */
+    --bg-2:      light-dark(#ffffff, #030407); /* campos de formulario / zonas hundidas */
+    --surface:   light-dark(#ffffff, #111214); /* tarjetas */
+    --surface-2: light-dark(#f6f7f9, #17181c); /* burbujas, bloques secundarios */
+    --text:      light-dark(#14161a, #f7f8fb);
+    --muted:     light-dark(#4a5060, #c3c5cc); /* texto secundario */
+    --line:      light-dark(rgba(20, 22, 26, 0.16), rgba(247, 248, 251, 0.12));
+    --hover:     light-dark(rgba(20, 22, 26, 0.06), rgba(247, 248, 251, 0.08));
+    --glass:     light-dark(rgba(255, 255, 255, 0.88), rgba(9, 9, 9, 0.85)); /* header/barras con blur */
+    --shadow:    light-dark(0 10px 30px rgba(20, 22, 26, 0.16), 0 10px 30px rgba(0, 0, 0, 0.55));
+    --scrim:     rgba(0, 0, 0, 0.55); /* fondo detrás de modales y drawers */
+
+    /* ---------- Marca ---------- */
+    --red:       #cd0000;                              /* botones (texto blanco encima: 5.9:1) */
+    --red-hot:   #ff0000;                              /* solo brillos/decoración: con texto blanco da 4.0:1 */
+    --red-hover: #d90000;                              /* hover de botones rojos: texto blanco 5.4:1 */
+    --red-dark:  #580000;
+    --accent:    light-dark(#b80000, #ff5252);         /* rojo para TEXTO sobre el fondo */
+    --on-red:    #ffffff;
+
+    /* ---------- Estados (texto sobre superficies) ---------- */
+    --good: light-dark(#0f7a3b, #4ade80);
+    --warn: light-dark(#8a5a00, #fbbf24);
+    --bad:  light-dark(#c62020, #ff7b7b);
+
+    /* ---------- Etapas de producción ---------- */
+    --st-quote:      light-dark(#475569, #cbd5e1);
+    --st-approved:   light-dark(#1d4ed8, #93c5fd);
+    --st-production: light-dark(#8a5a00, #fcd34d);
+    --st-quality:    light-dark(#7e22ce, #d8b4fe);
+    --st-shipping:   light-dark(#b45309, #fdba74);
+    --st-delivered:  light-dark(#0f7a3b, #86efac);
+
+    /* ---------- Layout ---------- */
+    --header-h: 112px; /* lo recalcula site-header.js con el alto real del header */
+    --radius: 12px;
+
+    /* ---------- Alias heredados: el CSS viejo usa estos nombres. Apuntan a los semánticos. ---------- */
+    --black: var(--bg);
+    --black-2: var(--bg-2);
+    --white: var(--text);
+    --soft: var(--muted);
+    --card: var(--surface);
+
     box-sizing: border-box;
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
 }
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"]  { color-scheme: dark; }

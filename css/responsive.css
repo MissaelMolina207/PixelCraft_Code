@@ -1,28 +1,14 @@
+/* css/responsive.css — Reglas transversales finales. Mobile-first: lo base es móvil; aquí solo se EXTIENDE hacia arriba.
+ * (Header, drawer, burbuja y secciones tienen sus propios @media dentro de header.css, float.css y sections.css.) */
 @media (min-width: 900px) {
-  nav {
-    display: flex;
-  }
-  #loc {
-    display: block;
-  }
-  .dock {
-    display: none;
-  }
-  body {
-    padding-bottom: 0;
-  }
+  .studio { grid-template-columns: 1fr 1fr; }
 }
-@media (min-width: 900px) {
-  .studio {
-    grid-template-columns: 1fr 1fr;
-  }
-}
+
+/* Nada que el usuario escriba o que venga de la base de datos puede romper el layout */
+img, svg, video { max-width: 100%; }
+p, h1, h2, h3, li, td, th, label { overflow-wrap: anywhere; }
+
 @media (prefers-reduced-motion: reduce) {
-  * {
-    animation: none !important;
-    transition: none !important;
-  }
-  html {
-    scroll-behavior: auto;
-  }
+  * { animation: none !important; transition: none !important; }
+  html { scroll-behavior: auto; }
 }

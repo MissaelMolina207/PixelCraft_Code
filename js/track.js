@@ -1,6 +1,13 @@
 // js/track.js — Rastreo público. Folio + últimos 4 dígitos → /api/track → timeline.
 // Todo texto del servidor entra con textContent (nunca innerHTML).
 import { $, getJSON, wa, toast } from './utils.js';
+import { initTheme } from './theme.js';
+import { hydrateIcons } from './icons.js';
+import { initSiteHeader } from './site-header.js';
+
+initTheme();
+hydrateIcons();
+initSiteHeader();
 
 const el = (tag, props = {}, ...kids) => {
   const n = document.createElement(tag);

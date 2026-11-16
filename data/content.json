@@ -1,0 +1,69 @@
+{
+  "_nota": "Contenido por defecto del sitio. Se edita en /admin → Sitio (se guarda en la base de datos y tiene prioridad sobre este archivo). Si la base no responde, el sitio usa este archivo.",
+  "hero": {
+    "actions": [
+      { "label": "Cotizar mi proyecto", "kind": "link", "href": "#contacto", "style": "red" },
+      { "label": "Diseñar con IA", "kind": "studio", "href": "", "style": "ghost" }
+    ]
+  },
+  "badges": [
+    { "icon": "shield", "text": "Pago cifrado con Stripe" },
+    { "icon": "file", "text": "Revisión de archivo gratis" },
+    { "icon": "box", "text": "Muestra desde 1 pieza" }
+  ],
+  "capacity": { "label": "Cupos de producción esta semana", "total": 20 },
+  "value": {
+    "title": "Taller de verdad. Interfaz de este siglo.",
+    "lead": "",
+    "items": [
+      { "icon": "ruler", "title": "Tolerancias, no “a ojo”", "text": "Revisamos tu archivo y calibramos por material antes de producir. Si no se puede fabricar, te lo decimos el mismo día." },
+      { "icon": "eye", "title": "Mockup antes de pagar", "text": "El Estudio IA proyecta tu idea sobre el producto. Aprobar con los ojos cuesta menos que corregir con el bolsillo." },
+      { "icon": "gauge", "title": "Cupos reales", "text": "Producimos por capacidad semanal. El número sobre el catálogo es el real: baja solo cuando entra un pedido de verdad, no es un contador con trauma." }
+    ]
+  },
+  "process": {
+    "title": "Cuatro pasos. Cero misterios.",
+    "lead": "",
+    "steps": [
+      { "icon": "pencil", "title": "Brief", "text": "Nos cuentas qué quieres y en qué cantidad." },
+      { "icon": "sparkle", "title": "Mockup IA", "text": "Ves el producto antes de producir." },
+      { "icon": "shirt", "title": "Muestra", "text": "Pieza física de prueba. Ajustamos lo necesario." },
+      { "icon": "truck", "title": "Producción", "text": "Tirada, control de calidad y envío." }
+    ]
+  },
+  "bubble": {
+    "logo": "",
+    "tips": [
+      "Tip: pega tu logo directo en el chat (Ctrl+V) y te lo pongo en una playera.",
+      "Tip: escribe el texto exacto entre comillas y la IA lo respeta mucho más.",
+      "Tip: ¿te gustó un diseño? Dime «hazlo en rojo» y lo cambio sin empezar de cero.",
+      "Tip: en Rastreo pones tu folio y ves en qué etapa va tu pedido.",
+      "Tip: arrastra esta burbuja a donde te estorbe menos. No me ofendo.",
+      "Tip: toca una categoría del catálogo y sus subcategorías aparecen justo a su lado.",
+      "Tip: el botón de la luna, arriba, cambia entre modo claro, oscuro y el de tu sistema."
+    ],
+    "ads": [
+      "Muestra desde 1 pieza: aprueba con las manos antes de producir en volumen.",
+      "La revisión de tu archivo es gratis. Sí, gratis. Sin letra chiquita.",
+      "Los cupos de producción son reales: míralos sobre el catálogo.",
+      "Enviamos a todo México. Te damos la guía y la ves en tu rastreo.",
+      "Pago cifrado con Stripe: los datos de tu tarjeta ni los vemos."
+    ],
+    "recs": [
+      "¿Primera vez? Empieza con una playera: es lo más fácil de imaginar en el mockup.",
+      "¿Regalo para la oficina? Pregunta por tazas y llaveros en volumen.",
+      "Para stickers y letreros sube tu logo en vector si lo tienes: se ve más filoso.",
+      "¿Dudas de tiempos o mínimos? Abre Ayuda: ahí está todo sin esperar a nadie."
+    ],
+    "jokes": [
+      "WhatsApp es muy serio y casi no me habla. Yo sí: pregúntame lo que quieras.",
+      "WhatsApp contesta «ahorita te cotizo». Yo contesto en segundos. Sin ofender, WhatsApp.",
+      "Soy una IA con mucho talento y cero prestaciones. Pídeme un mockup.",
+      "Dicen que una imagen vale mil palabras. Mis mockups valen mil palabras y una cotización.",
+      "Mi trabajo: convertir «algo bonito, ya sabes» en una playera. Hagamos magia.",
+      "Los diseños que no te gustan se borran gratis. Los tatuajes no. Piénsalo.",
+      "Cuidado: tras tres mockups empiezas a ver todo con tu logo encima. Efecto secundario conocido.",
+      "No necesito vacaciones, pero mi creatividad sí necesita tu prompt."
+    ]
+  }
+}

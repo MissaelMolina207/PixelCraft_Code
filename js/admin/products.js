@@ -1,6 +1,6 @@
 // js/admin/products.js — Editor del catálogo. Lo que guardas aquí lo ve el sitio (caché de borde ~1 min) y lo cobra Stripe.
 import { api } from './api.js';
-import { el, field, select, money, toast, modal, confirmBox, badge } from './ui.js';
+import { el, field, select, mobileTable, money, toast, modal, confirmBox, badge } from './ui.js';
 import { SECTORS } from '../catalog.js'; // una sola fuente de verdad para sectores y subsectores
 
 const CATS = [['promo', 'Promocional'], ['screen', 'Serigrafía'], ['3d', 'Impresión 3D'], ['cut', 'Corte láser'], ['ia', 'Diseño IA']];
@@ -13,7 +13,7 @@ export async function renderProducts(root) {
 
   async function load() {
     const { products } = await api('products');
-    holder.replaceChildren(products.length ? el('table', { class: 'adm-table' },
+    holder.replaceChildren(products.length ? mobileTable(el('table', { class: 'adm-table' },
       el('thead', {}, el('tr', {}, ['', 'Producto', 'Precio', 'Sector', 'Estado', ''].map(h => el('th', {}, h)))),
       el('tbody', {}, products.map(p => el('tr', {},
         el('td', {}, p.img ? el('img', { class: 'adm-thumb', src: p.img, alt: '', loading: 'lazy' }) : el('span', { class: 'adm-thumb tag' }, p.tag || '📦')),
@@ -26,7 +26,7 @@ export async function renderProducts(root) {
           el('button', { class: 'btn danger', type: 'button', onclick: async () => {
             if (!(await confirmBox(`¿Eliminar «${p.name}» del catálogo?`, { ok: 'Eliminar', danger: true }))) return;
             try { await api('products', { method: 'DELETE', query: { id: p.id } }); toast('Producto eliminado'); await load(); } catch (e) { toast(e.message); }
-          } }, 'Eliminar'))))))
+          } }, 'Eliminar')))))))
       : el('p', { class: 'adm-empty' }, 'El catálogo está vacío (el sitio mostrará data/products.json). Crea un producto.'));
   }
 

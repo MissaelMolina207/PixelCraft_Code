@@ -1,7 +1,7 @@
 // js/admin/channels.js — Canales de venta: ventas por canal, inventario general y mapeo de publicaciones por marketplace.
 // PixelCraft es la FUENTE DE VERDAD del stock; n8n empuja los números a cada marketplace (ver tarjeta "Integración").
 import { api } from './api.js';
-import { el, field, select, money, toast, modal, confirmBox, badge, channelBadge, MARKETPLACES } from './ui.js';
+import { el, field, select, mobileTable, money, toast, modal, confirmBox, badge, channelBadge, MARKETPLACES } from './ui.js';
 
 const STATUS = [['active', 'Activa'], ['paused', 'Pausada'], ['draft', 'Borrador']];
 const STATUS_CLS = { active: 'good', paused: 'low', draft: '' };
@@ -31,14 +31,14 @@ export async function renderChannels(root) {
   function matrix(products) {
     return el('div', { class: 'adm-panel' }, el('h2', {}, 'Inventario y publicaciones'),
       el('p', { class: 'adm-hint' }, 'Stock = lo que hay en el taller. «Publica» = stock − reserva del canal. Las ventas de cualquier canal lo descuentan solas (partidas con producto del inventario).'),
-      el('div', { class: 'adm-table-wrap flat' }, el('table', { class: 'adm-table' },
+      el('div', { class: 'adm-table-wrap flat' }, mobileTable(el('table', { class: 'adm-table' },
         el('thead', {}, el('tr', {}, ['Producto', 'Stock', 'Tienda web', ...MARKETPLACES].map(h => el('th', {}, h)))),
         el('tbody', {}, products.map(p => el('tr', {},
           el('td', {}, el('strong', {}, p.name), el('small', {}, p.id)),
           el('td', {}, p.stock == null ? el('span', { class: 'adm-hint' }, 'sin control') : el('strong', { class: p.stock <= 0 ? 'neg' : p.stock < 5 ? 'low' : '' }, String(p.stock)),
             el('button', { class: 'btn adm-mini', type: 'button', onclick: () => editStock(p) }, p.stock == null ? 'Iniciar' : 'Ajustar')),
           el('td', {}, p.hidden ? badge('Oculto', 'low') : badge(`Visible · ${money(p.price)}`, 'good')),
-          ...MARKETPLACES.map(ch => cell(p, ch))))))));
+          ...MARKETPLACES.map(ch => cell(p, ch)))))))));
   }
 
   function cell(p, ch) {

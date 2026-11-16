@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Admin — PixelCraft</title>
     <meta name="robots" content="noindex, nofollow">
+    <meta name="color-scheme" content="light dark">
+    <script>try{var t=localStorage.getItem('pc-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
     <link rel="stylesheet" href="css/tokens.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/admin.css">
 </head>
 <body class="adm">
@@ -34,9 +37,11 @@
                 <a href="#board">Tablero</a>
                 <a href="#calc">Calculadoras</a>
                 <a href="#channels">Canales</a>
+                <a href="#site">Sitio</a>
                 <a href="#team">Equipo</a>
                 <a href="#products">Catálogo</a>
             </nav>
+            <button class="icon-btn" type="button" data-theme-cycle aria-label="Cambiar tema"></button>
             <button class="btn" id="logout" type="button">Salir</button>
         </div>
         <main class="adm-main" id="view" aria-live="polite"></main>

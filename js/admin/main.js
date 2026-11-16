@@ -8,8 +8,13 @@ import { renderTeam } from './team.js';
 import { renderProducts } from './products.js';
 import { renderCalc } from './calc.js';
 import { renderChannels } from './channels.js';
+import { renderSite } from './site.js';
+import { initTheme } from '../theme.js';
+import { hydrateIcons } from '../icons.js';
 
-const VIEWS = { panel: renderDashboard, orders: renderOrders, board: renderBoard, calc: renderCalc, channels: renderChannels, team: renderTeam, products: renderProducts };
+const VIEWS = { panel: renderDashboard, orders: renderOrders, board: renderBoard, calc: renderCalc, channels: renderChannels, site: renderSite, team: renderTeam, products: renderProducts };
+initTheme();
+hydrateIcons();
 const login = $('#login'), app = $('#app'), view = $('#view');
 
 function show(authed, msg = '') {

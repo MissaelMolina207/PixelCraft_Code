@@ -1,6 +1,6 @@
 // js/admin/orders.js — Lista de órdenes + formulario completo (canal, cliente, pedido, finanzas, producción, envío, tareas, historial).
 import { api } from './api.js';
-import { el, field, select, money, pct, fdate, STAGES, CHANNELS, MARKETPLACES, isMarketplace, channelClass, channelBadge, stageLabel, toast, modal, confirmBox, badge } from './ui.js';
+import { el, field, select, mobileTable, money, pct, fdate, STAGES, CHANNELS, MARKETPLACES, isMarketplace, channelClass, channelBadge, stageLabel, toast, modal, confirmBox, badge } from './ui.js';
 
 const TYPES = ['Particular', 'Empresa', 'Agencia', 'Artista'];
 const TASK_STATUS = [['todo', 'Por hacer'], ['doing', 'En proceso'], ['done', 'Hecha']];
@@ -44,7 +44,7 @@ export async function renderOrders(root) {
   function table(orders) {
     if (!orders.length) return el('p', { class: 'adm-empty' }, state.q || state.stage !== 'active' || state.channel ? 'Ninguna orden coincide con el filtro.' : 'Aún no hay órdenes activas. Crea la primera con «+ Nueva orden» o guarda una cotización desde Calculadoras.');
     const open = o => openOrder(o.folio, { onSaved: load });
-    return el('table', { class: 'adm-table' },
+    return mobileTable(el('table', { class: 'adm-table' },
       el('thead', {}, el('tr', {}, ['Folio', 'Canal', 'Cliente', 'Pedido', 'Etapa', 'Entrega', 'Venta', 'Utilidad', 'Por cobrar', 'Guía'].map(h => el('th', {}, h)))),
       el('tbody', {}, orders.map(o => el('tr', { tabindex: 0, class: `clickable ${channelClass(o.channel)}-row`, onclick: () => open(o), onkeydown: e => { if (e.key === 'Enter') open(o); } },
         el('td', { class: 'mono' }, o.folio, o.ext_ref ? el('small', {}, o.ext_ref) : null),
@@ -56,7 +56,7 @@ export async function renderOrders(root) {
         el('td', {}, money(o.price)),
         el('td', { class: o.margin < 0 ? 'neg' : o.marginPct < 20 && o.price > 0 ? 'low' : 'good' }, money(o.margin), el('small', {}, o.fee ? `${pct(o.marginPct)} · com. ${money(o.fee)}` : pct(o.marginPct))),
         el('td', { class: o.balance > 0 && o.stage !== 'quote' ? 'low' : '' }, o.stage === 'quote' ? '—' : money(o.balance)),
-        el('td', { class: 'mono' }, o.guide || '—')))));
+        el('td', { class: 'mono' }, o.guide || '—'))))));
   }
 }
 

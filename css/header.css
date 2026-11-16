@@ -1,0 +1,227 @@
+/* css/header.css — Header de 2 filas, botones de icono y drawer (menú lateral móvil).
+ *
+ * MOBILE-FIRST: lo que está fuera de @media es el diseño de celular. Los @media (min-width) SOLO añaden.
+ *   Móvil (< 900px):  fila 1 = logo ········ [tema][carrito][☰]   fila 2 = búsqueda a todo el ancho. El menú vive en el drawer.
+ *   Escritorio (≥ 900px): fila 1 = logo | búsqueda centrada | [ubicación][tema][carrito]   fila 2 = navegación.
+ *
+ * El header es `sticky` (ocupa su lugar en el flujo) y NO `fixed`: así el contenido nunca queda tapado y no hay que
+ * "compensar" alturas a mano. js/site-header.js solo mide su alto real para los saltos de ancla (--header-h).
+ */
+html { scroll-padding-top: calc(var(--header-h) + 8px); }
+
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -64px;
+  z-index: 200;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--red);
+  color: var(--on-red);
+  font-weight: 700;
+}
+.skip-link:focus { top: 10px; }
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding-top: env(safe-area-inset-top, 0px);
+  background: var(--glass);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+
+/* ---------- Fila 1 ---------- */
+.hdr-top {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "logo tools" "search search";
+  align-items: center;
+  gap: 8px 12px;
+  padding-block: 10px;
+}
+.logo {
+  grid-area: logo;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  font-size: 1.25rem;
+  white-space: nowrap;
+}
+.logo b { color: var(--accent); }
+
+.hdr-search {
+  grid-area: search;
+  position: relative;
+  width: 100%;
+  max-width: 760px;
+  justify-self: center;
+}
+.hdr-search .search {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 52px 0 16px;
+  border-radius: 10px;
+  font-size: 1rem;            /* 16px: evita el zoom automático de iOS al enfocar */
+  background: var(--bg-2);
+}
+.hdr-search-btn {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.hdr-search-btn:hover { background: var(--hover); color: var(--text); }
+
+.hdr-tools { grid-area: tools; display: flex; align-items: center; gap: 4px; }
+.hdr-loc { display: none; align-items: center; gap: 6px; padding-left: 10px; border: 1px solid var(--line); border-radius: 10px; color: var(--muted); }
+.hdr-loc select { width: auto; min-height: 42px; padding: 0 8px 0 0; border: 0; background: transparent; font-size: 0.9rem; }
+
+.icon-btn {
+  position: relative;
+  width: 44px;                /* 44×44: tamaño mínimo cómodo para el dedo */
+  height: 44px;
+  display: inline-grid;
+  place-items: center;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.icon-btn:hover { background: var(--hover); }
+.cart-count {
+  position: absolute;
+  top: 3px;
+  right: 1px;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  display: grid;
+  place-items: center;
+  border-radius: 99px;
+  background: var(--red);
+  color: var(--on-red);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.ico { display: block; }
+.ico-wrap { display: inline-grid; place-items: center; }
+
+/* ---------- Fila 2 (solo escritorio) ---------- */
+.hdr-nav { display: none; border-top: 1px solid var(--line); }
+.hdr-nav .wrap { display: flex; gap: 4px; }
+.hdr-nav a {
+  position: relative;
+  padding: 11px 14px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+.hdr-nav a:hover, .hdr-nav a[aria-current="true"] { color: var(--text); }
+.hdr-nav a[aria-current="true"]::after {   /* subrayado de la sección que estás viendo (scroll-spy) */
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 0;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background: var(--red);
+}
+
+/* ---------- Drawer ---------- */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: var(--scrim);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.scrim.show { opacity: 1; }
+.scrim[hidden] { display: none; }
+body.no-scroll { overflow: hidden; }  /* el fondo no se desplaza mientras hay un drawer/modal abierto */
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90;
+  width: min(88vw, 360px);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--surface);
+  border-left: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  transform: translateX(105%);
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  overscroll-behavior: contain;
+}
+.drawer.open { transform: none; }
+.drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(12px + env(safe-area-inset-top, 0px)) 12px 12px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.drawer-nav { display: grid; }
+.drawer-nav a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 54px;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 600;
+}
+.drawer-nav a .ico-wrap:last-child { margin-left: auto; color: var(--muted); }
+.drawer-nav a:hover, .drawer-nav a:active { background: var(--hover); }
+.drawer-sec { display: grid; gap: 8px; padding: 18px 20px 0; }
+.drawer-lbl { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.drawer-cta { padding-bottom: 24px; }
+.drawer-cta .btn { width: 100%; }
+
+/* Selector de 3 opciones (Sistema / Claro / Oscuro) */
+.seg { display: grid; grid-template-columns: repeat(3, 1fr); padding: 3px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg-2); }
+.seg button {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--muted);
+  font: 600 0.78rem system-ui, sans-serif;
+  cursor: pointer;
+}
+.seg button.on { background: var(--red); color: var(--on-red); }
+
+/* ---------- ≥ 900px: aparece la fila de navegación y el selector de ubicación; se va el ☰ ---------- */
+@media (min-width: 900px) {
+  .hdr-top { grid-template-columns: auto 1fr auto; grid-template-areas: "logo search tools"; gap: 12px 24px; }
+  .hdr-loc { display: flex; }
+  .burger { display: none; }
+  .hdr-nav { display: block; }
+  .drawer, .scrim#drawerScrim { display: none; }
+}
+
+/* Variante sin buscador (rastreo): una sola fila de herramientas */
+.hdr-top.lite { grid-template-areas: "logo tools"; }
+.hdr-back { display: none; min-height: 40px; padding: 0 16px; }
+@media (min-width: 900px) { .hdr-top.lite { grid-template-areas: "logo tools"; grid-template-columns: 1fr auto; } .hdr-back { display: inline-flex; } }

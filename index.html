@@ -5,39 +5,96 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>PixelCraft — El Laboratorio de la Casa</title>
     <meta name="description" content="Impresión 3D, serigrafía y letreros en volumen. Diseña con IA, ve el mockup y cotiza en minutos.">
+    <meta name="color-scheme" content="light dark">
+    <!-- Aplica el tema guardado ANTES de pintar (evita el parpadeo claro→oscuro). Lógica completa en js/theme.js -->
+    <script>try{var t=localStorage.getItem('pc-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
     <link rel="stylesheet" href="css/tokens.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/sections.css">
     <link rel="stylesheet" href="css/studio-chat.css">
+    <link rel="stylesheet" href="css/float.css">
     <link rel="stylesheet" href="css/help.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
-    <header>
-        <div class="wrap">
-            <a class="logo" href="#top">PIXEL
-                <b>CRAFT</b>
-            </a>
-            <nav>
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+
+    <!-- ============ HEADER: 2 filas. Fila 1 = logo + búsqueda + herramientas. Fila 2 = navegación. ============ -->
+    <header class="site-header" id="siteHeader">
+        <div class="hdr-top wrap">
+            <a class="logo" href="#top" aria-label="PixelCraft, ir al inicio">PIXEL <b>CRAFT</b></a>
+
+            <form class="hdr-search" id="searchForm" role="search">
+                <input id="q" class="search" type="search" placeholder="Buscar: llavero, playera, letrero…" aria-label="Buscar productos" enterkeyhint="search" autocomplete="off">
+                <button class="hdr-search-btn" type="submit" aria-label="Buscar"><i data-icon="search"></i></button>
+            </form>
+
+            <div class="hdr-tools">
+                <label class="hdr-loc">
+                    <i data-icon="pin" data-size="18"></i>
+                    <select id="loc" aria-label="Ubicación de entrega">
+                        <option>Envío a todo México</option>
+                        <option>Recoger en taller</option>
+                        <option>Internacional</option>
+                    </select>
+                </label>
+                <button class="icon-btn" type="button" data-theme-cycle aria-label="Cambiar tema"></button>
+                <button class="icon-btn cart-btn" id="cartBtn" type="button" aria-label="Abrir carrito"><i data-icon="cart"></i><span id="count" class="cart-count">0</span></button>
+                <button class="icon-btn burger" id="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="drawer"><i data-icon="menu"></i></button>
+            </div>
+        </div>
+        <nav class="hdr-nav" aria-label="Principal">
+            <div class="wrap">
                 <a href="#catalogo">Catálogo</a>
-                <a href="#estudio">Estudio IA</a>
+                <a href="#estudio" data-open-studio>Estudio IA</a>
                 <a href="#proceso">Proceso</a>
                 <a href="rastreo.html">Rastreo</a>
                 <a href="#contacto">Contacto</a>
                 <a href="#ayuda">Ayuda</a>
-            </nav>
-            <input id="q" class="search" type="search" placeholder="Buscar: llavero, playera, letrero…" aria-label="Buscar productos">
-            <select id="loc" aria-label="Ubicación de entrega">
+            </div>
+        </nav>
+    </header>
+
+    <!-- ============ DRAWER (menú lateral móvil) ============ -->
+    <div class="scrim" id="drawerScrim" hidden></div>
+    <aside class="drawer" id="drawer" aria-label="Menú principal" inert>
+        <div class="drawer-head">
+            <span class="logo">PIXEL <b>CRAFT</b></span>
+            <button class="icon-btn" id="drawerClose" type="button" aria-label="Cerrar menú"><i data-icon="close"></i></button>
+        </div>
+        <nav class="drawer-nav" aria-label="Menú">
+            <a href="#catalogo"><i data-icon="tag"></i>Catálogo<i data-icon="chevron-r" data-size="18"></i></a>
+            <a href="#estudio" data-open-studio><i data-icon="sparkle"></i>Estudio IA<i data-icon="chevron-r" data-size="18"></i></a>
+            <a href="#proceso"><i data-icon="layers"></i>Proceso<i data-icon="chevron-r" data-size="18"></i></a>
+            <a href="rastreo.html"><i data-icon="truck"></i>Rastreo de pedidos<i data-icon="chevron-r" data-size="18"></i></a>
+            <a href="#contacto"><i data-icon="chat"></i>Contacto<i data-icon="chevron-r" data-size="18"></i></a>
+            <a href="#ayuda"><i data-icon="shield"></i>Ayuda<i data-icon="chevron-r" data-size="18"></i></a>
+        </nav>
+        <div class="drawer-sec">
+            <label class="drawer-lbl" for="locM">Ubicación de entrega</label>
+            <select id="locM">
                 <option>Envío a todo México</option>
                 <option>Recoger en taller</option>
                 <option>Internacional</option>
             </select>
-            <button class="btn" id="cartBtn" aria-label="Abrir carrito">🛒 <span id="count">0</span></button>
         </div>
-    </header>
-    
+        <div class="drawer-sec">
+            <span class="drawer-lbl" id="themeLbl">Apariencia</span>
+            <div class="seg" role="radiogroup" aria-labelledby="themeLbl">
+                <button type="button" role="radio" data-theme-set="system"><i data-icon="monitor" data-size="18"></i>Sistema</button>
+                <button type="button" role="radio" data-theme-set="light"><i data-icon="sun" data-size="18"></i>Claro</button>
+                <button type="button" role="radio" data-theme-set="dark"><i data-icon="moon" data-size="18"></i>Oscuro</button>
+            </div>
+        </div>
+        <div class="drawer-sec drawer-cta">
+            <a class="btn red" id="waDrawer" target="_blank" rel="noopener">Cotizar por WhatsApp</a>
+            <a class="btn" href="#estudio" data-open-studio>Diseñar con IA</a>
+        </div>
+    </aside>
+
     <main id="top">
-        <!-- SECCIÓN DE BANNER PANORÁMICO ESTILO MERCADO LIBRE -->
         <section class="ml-hero-section">
             <div class="ml-carousel-container" id="mlHeroCarousel">
                 <div class="ml-carousel-track" id="mlTrack">
@@ -115,136 +172,59 @@
             </div>
         </section>
 
-        <!-- Bloque informativo inferior integrado -->
-        <section style="padding-top: 10px;">
+        <!-- ============ ACCIONES RÁPIDAS + INSIGNIAS (editables en /admin → Sitio) ============ -->
+        <section class="actions-band" aria-label="Acciones rápidas">
             <div class="wrap">
-                <div class="row">
-                    <a class="btn red pulse" href="#contacto">Cotizar mi proyecto</a>
-                    <a class="btn" href="#estudio">Diseñar con IA</a>
-                </div>
-                <div class="row trust" style="margin-top: 26px; gap: 8px 20px; color: var(--soft); font-size: 0.85rem;">
-                    <span>Pago cifrado con Stripe</span>
-                    <span>Revisión de archivo gratis</span>
-                    <span>Muestra desde 1 pieza</span>
-                </div>
-                <div class="slots" style="margin-top: 22px; max-width: 360px; font-size: 0.88rem; color: var(--soft);">
-                    Cupos de producción esta semana: <b class="mono" id="slotsTxt"></b>
-                    <div class="bar" style="height: 6px; border-radius: 9px; background: var(--line); margin-top: 8px; overflow: hidden;">
-                        <i id="slotsBar" style="display: block; height: 100%; background: var(--red-hot);"></i>
-                    </div>
-                </div>
+                <div class="hero-actions" id="heroActions"></div>
+                <ul class="trust-list" id="heroBadges"></ul>
             </div>
         </section>
 
-        <!-- CATÁLOGO ESTILO MERCADO LIBRE -->
+        <!-- ============ CATÁLOGO ============ -->
         <section id="catalogo">
             <div class="wrap">
-                <!-- 1. BARRA SUPERIOR DE CATEGORÍAS -->
+                <!-- Cupos: dato REAL (órdenes activas del taller). Lo calcula /api/site -->
+                <div class="capacity" id="capacity" hidden>
+                    <div class="capacity-head">
+                        <span class="capacity-label"><i data-icon="gauge" data-size="18"></i><span id="capLabel">Cupos de producción esta semana</span></span>
+                        <b class="mono" id="capTxt"></b>
+                    </div>
+                    <div class="capacity-bar" id="capBar" role="progressbar" aria-labelledby="capLabel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div>
+                    <small id="capNote"></small>
+                </div>
+
+                <!-- Una sola línea: categoría elegida + sus subcategorías van primero (ver js/catalog.js) -->
                 <div class="chips-carousel-wrapper">
-                    <button class="cat-nav-btn chips-prev" id="chipsPrev" aria-label="Anterior">‹</button>
-                    <div class="chips ml-chips" id="chips"></div>
-                    <button class="cat-nav-btn chips-next" id="chipsNext" aria-label="Siguiente">›</button>
+                    <button class="cat-nav-btn chips-prev" id="chipsPrev" type="button" aria-label="Categorías anteriores"><i data-icon="chevron-l" data-size="20"></i></button>
+                    <div class="chips ml-chips" id="chips" role="group" aria-label="Categorías del catálogo"></div>
+                    <button class="cat-nav-btn chips-next" id="chipsNext" type="button" aria-label="Categorías siguientes"><i data-icon="chevron-r" data-size="20"></i></button>
                 </div>
 
-                <!-- 2. ATAJOS / SUBCATEGORÍAS CON ICONOS -->
-                <div class="subchips-carousel-wrapper" id="subchipsWrapper">
-                    <button class="cat-nav-btn subchips-prev" id="subchipsPrev" aria-label="Anterior">‹</button>
-                    <div class="ml-shortcuts" id="subchips"></div>
-                    <button class="cat-nav-btn subchips-next" id="subchipsNext" aria-label="Siguiente">›</button>
-                </div>
-
-                <!-- 3. CARRUSEL HORIZONTAL DE PRODUCTOS -->
                 <div class="ecommerce-carousel-wrapper">
-                    <button class="cat-nav-btn cat-prev" id="catPrev" aria-label="Anterior">‹</button>
+                    <button class="cat-nav-btn cat-prev" id="catPrev" type="button" aria-label="Productos anteriores"><i data-icon="chevron-l" data-size="20"></i></button>
                     <div class="ecommerce-grid" id="grid"></div>
-                    <button class="cat-nav-btn cat-next" id="catNext" aria-label="Siguiente">›</button>
+                    <button class="cat-nav-btn cat-next" id="catNext" type="button" aria-label="Productos siguientes"><i data-icon="chevron-r" data-size="20"></i></button>
                 </div>
 
                 <p class="note" style="margin-top:16px">Precios de muestra en MXN. En volumen el costo por pieza baja: cotiza.</p>
             </div>
         </section>
 
-        <!-- ESTUDIO IA -->
-        <section id="estudio">
+        <!-- ============ VALOR (editable en /admin → Sitio) ============ -->
+        <section id="valor" class="value-section">
             <div class="wrap">
-                <h2>Platica tu idea. Míralo hecho realidad.</h2>
-                <p class="studio-lead">Escribe lo que imaginas, sube tu arte si ya lo tienes y ajústalo hasta que te encante. Cuando estés listo, lo cotizamos por WhatsApp.</p>
-
-                <div class="chat" id="chat">
-                <div class="chat-log" id="chatLog" role="log" aria-live="polite" aria-relevant="additions"></div>
-
-                    <div class="chat-cta" id="chatCta" hidden>
-                        <div class="chat-cta-text">
-                            <strong>¿Te gustó cómo va?</strong>
-                            <small id="ctaNote">Descarga la imagen y adjúntala en el chat de WhatsApp.</small>
-                        </div>
-                        <a class="btn red pulse" id="chatQuote" target="_blank" rel="noopener">Cotizar por WhatsApp</a>
-                    </div>
-
-                    <form class="chat-composer" id="chatForm" autocomplete="off">
-                        <div class="chat-tray" id="chatTray" hidden></div>
-                        <div class="chat-row">
-                            <input type="file" id="chatFile" accept="image/png,image/jpeg,image/webp" multiple hidden>
-                            <button class="chat-icon" id="chatAttach" type="button" aria-label="Adjuntar tu arte o referencia" title="Adjuntar tu arte o referencia">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.4 11.1-8.5 8.5a5.5 5.5 0 0 1-7.8-7.8l8.5-8.5a3.7 3.7 0 0 1 5.2 5.2l-8.5 8.5a1.8 1.8 0 0 1-2.6-2.6l7.8-7.8"/></svg>
-                            </button>
-                            <textarea id="chatInput" rows="1" maxlength="300" aria-label="Describe tu idea" placeholder="Describe tu idea. Ej: playera con un hot dog retro"></textarea>
-                            <button class="btn red chat-send" id="chatSend" type="submit">Enviar</button>
-                        </div>
-                        <div class="chat-foot">
-                            <small class="chat-hint">Enter envía · Shift+Enter nueva línea · Puedes pegar o arrastrar tu imagen aquí.</small>
-                            <button class="chat-reset" id="chatReset" type="button">Nueva idea</button>
-                        </div>
-                    </form>
-                </div>
+                <h2 id="valueTitle"></h2>
+                <p class="section-lead" id="valueLead"></p>
+                <div class="value-grid" id="valueGrid"></div>
             </div>
         </section>
 
-        <section>
+        <!-- ============ PROCESO (editable en /admin → Sitio) ============ -->
+        <section id="proceso" class="process-section">
             <div class="wrap">
-                <h2>Taller de verdad. Interfaz de este siglo.</h2>
-                <div class="grid g3">
-                    <div class="card">
-                        <h3>Tolerancias, no “a ojo”</h3>
-                        <p>Revisamos tu archivo y calibramos por material antes de producir. Si no se puede fabricar, te lo decimos el mismo día.</p>
-                    </div>
-                    <div class="card">
-                        <h3>Mockup antes de pagar</h3>
-                        <p>El Estudio IA proyecta tu idea sobre el producto. Aprobar con los ojos cuesta menos que corregir con el bolsillo.</p>
-                    </div>
-                    <div class="card">
-                        <h3>Cupos reales</h3>
-                        <p>Producimos por capacidad semanal. El número de arriba es el real, no un contador con trauma.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="proceso">
-            <div class="wrap">
-                <h2>Cuatro pasos. Cero misterios.</h2>
-                <div class="grid g4">
-                    <div class="card step">
-                        <b>01</b>
-                        <h3>Brief</h3>
-                        <p>Nos cuentas qué quieres y en qué cantidad.</p>
-                    </div>
-                    <div class="card step">
-                        <b>02</b>
-                        <h3>Mockup IA</h3>
-                        <p>Ves el producto antes de producir.</p>
-                    </div>
-                    <div class="card step">
-                        <b>03</b>
-                        <h3>Muestra</h3>
-                        <p>Pieza física de prueba. Ajustamos lo necesario.</p>
-                    </div>
-                    <div class="card step">
-                        <b>04</b>
-                        <h3>Producción</h3>
-                        <p>Tirada, control de calidad y envío.</p>
-                    </div>
-                </div>
+                <h2 id="processTitle"></h2>
+                <p class="section-lead" id="processLead"></p>
+                <ol class="process-steps" id="processSteps"></ol>
             </div>
         </section>
 
@@ -284,12 +264,13 @@
             </div>
         </section>
     </main>
-    
+
     <footer>
         <div class="wrap">© PixelCraft, El Laboratorio de la Casa. Hecho con precisión y poca paciencia. · <a href="rastreo.html">Rastrea tu pedido</a></div>
     </footer>
 
-    <aside id="cart" aria-label="Carrito">
+    <div class="scrim" id="cartScrim" hidden></div>
+    <aside id="cart" aria-label="Carrito" inert>
         <div class="row" style="justify-content:space-between">
             <h3>Tu carrito</h3>
             <button class="btn" id="closeCart" aria-label="Cerrar carrito">✕</button>
@@ -298,10 +279,61 @@
         <b id="total"></b>
         <button class="btn red" id="pay">Pagar con Stripe</button>
     </aside>
-    <div class="dock">
-        <a class="btn red" href="#contacto">Cotizar</a>
-        <a class="btn" id="waDock" target="_blank" rel="noopener">WhatsApp</a>
+
+    <!-- ============ FLOTANTES: burbuja del Estudio IA (arrastrable) sobre el botón de WhatsApp ============ -->
+    <div class="fab-layer" id="fabLayer">
+        <button class="studio-bubble" id="studioBubble" type="button" aria-label="Abrir el Estudio IA" aria-haspopup="dialog" aria-expanded="false" aria-controls="studioPanel">
+            <!-- Espacio del logotipo: pon la ruta en /admin → Sitio → Burbuja → Logo. Mientras tanto, un destello. -->
+            <span class="bubble-logo" id="bubbleLogo"><i data-icon="sparkle" data-size="28"></i></span>
+            <span class="bubble-dot" id="bubbleDot" hidden></span>
+        </button>
+        <div class="bubble-tip" id="bubbleTip" role="status" aria-live="polite" hidden>
+            <button class="bubble-tip-x" id="bubbleTipX" type="button" aria-label="Cerrar sugerencia"><i data-icon="close" data-size="14"></i></button>
+            <p id="bubbleTipText"></p>
+            <div class="bubble-tip-actions">
+                <button type="button" id="bubbleTipOpen">Abrir Estudio IA</button>
+                <button type="button" id="bubbleTipMute">No más tips</button>
+            </div>
+        </div>
     </div>
+    <a class="wa-fab" id="waFab" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"><i data-icon="whatsapp" data-size="28"></i></a>
+
+    <!-- ============ PANEL DEL ESTUDIO IA (modal tipo Messenger) ============ -->
+    <div class="scrim studio-scrim" id="studioScrim" hidden></div>
+    <section class="studio-panel" id="studioPanel" role="dialog" aria-modal="true" aria-labelledby="studioTitle" hidden>
+        <div class="studio-panel-head">
+            <div class="studio-title"><span class="chat-dot" aria-hidden="true"></span><strong id="studioTitle">Estudio IA</strong><small>Borradores gratis</small></div>
+            <button class="icon-btn" id="studioClose" type="button" aria-label="Cerrar el Estudio IA"><i data-icon="close"></i></button>
+        </div>
+        <div class="chat" id="chat">
+            <div class="chat-log" id="chatLog" role="log" aria-live="polite" aria-relevant="additions"></div>
+
+            <div class="chat-cta" id="chatCta" hidden>
+                <div class="chat-cta-text">
+                    <strong>¿Te gustó cómo va?</strong>
+                    <small id="ctaNote">Descarga la imagen y adjúntala en el chat de WhatsApp.</small>
+                </div>
+                <a class="btn red pulse" id="chatQuote" target="_blank" rel="noopener">Cotizar por WhatsApp</a>
+            </div>
+
+            <form class="chat-composer" id="chatForm" autocomplete="off">
+                <div class="chat-tray" id="chatTray" hidden></div>
+                <div class="chat-row">
+                    <input type="file" id="chatFile" accept="image/png,image/jpeg,image/webp" multiple hidden>
+                    <button class="chat-icon" id="chatAttach" type="button" aria-label="Adjuntar tu arte o referencia" title="Adjuntar tu arte o referencia">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.4 11.1-8.5 8.5a5.5 5.5 0 0 1-7.8-7.8l8.5-8.5a3.7 3.7 0 0 1 5.2 5.2l-8.5 8.5a1.8 1.8 0 0 1-2.6-2.6l7.8-7.8"/></svg>
+                    </button>
+                    <textarea id="chatInput" rows="1" maxlength="300" aria-label="Describe tu idea" placeholder="Describe tu idea. Ej: playera con un hot dog retro"></textarea>
+                    <button class="btn red chat-send" id="chatSend" type="submit">Enviar</button>
+                </div>
+                <div class="chat-foot">
+                    <small class="chat-hint">Enter envía · Shift+Enter nueva línea · Puedes pegar o arrastrar tu imagen aquí.</small>
+                    <button class="chat-reset" id="chatReset" type="button">Nueva idea</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
     <div id="toast" role="status"></div>
 
     <script type="module" src="js/main.js"></script>

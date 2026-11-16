@@ -1,0 +1,83 @@
+/* css/sections.css — Bloques de la tienda: acciones rápidas, cupos, chips del catálogo, valor y proceso.
+ * Todo mobile-first y sobre tokens (nada de colores sueltos). */
+.section-lead { color: var(--muted); margin: -10px 0 22px; max-width: 62ch; }
+.mono { font-variant-numeric: tabular-nums; }
+
+/* ---------- Acciones rápidas + insignias de confianza ---------- */
+.actions-band { padding: 22px 0 6px; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; min-height: 48px; }
+.hero-actions .btn { min-height: 48px; padding: 0 24px; }
+.trust-list { list-style: none; display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 18px 0 0; padding: 0; min-height: 24px; color: var(--muted); font-size: 0.9rem; }
+.trust-list li { display: inline-flex; align-items: center; gap: 8px; }
+.trust-list .ico { color: var(--accent); }
+.btn.ghost { background: var(--surface); }
+@media (max-width: 480px) {
+  .hero-actions .btn { flex: 1 1 100%; }   /* en celular cada botón principal ocupa su renglón: más fácil de tocar */
+}
+
+/* ---------- Barra de cupos (dato real) ---------- */
+.capacity { display: grid; gap: 8px; margin: 0 0 18px; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.capacity[hidden] { display: none; }
+.capacity-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 16px; }
+.capacity-label { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; }
+.capacity-label .ico { color: var(--accent); }
+.capacity small { color: var(--muted); }
+.capacity-bar { height: 8px; border-radius: 99px; background: var(--hover); overflow: hidden; }
+.capacity-bar i { display: block; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, var(--red-dark), var(--red)); transition: width 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.capacity.hot .capacity-bar i { background: linear-gradient(90deg, var(--red), var(--red-hot)); }
+.capacity.hot #capTxt { color: var(--accent); }
+
+/* ---------- Chips del catálogo: UNA sola línea ---------- */
+.chips-carousel-wrapper { position: relative; display: flex; align-items: center; margin-bottom: 14px; }
+.ml-chips { display: flex; align-items: center; gap: 8px; width: 100%; padding: 6px 2px; overflow-x: auto; scroll-snap-type: none; scrollbar-width: none; scroll-behavior: smooth; }
+.ml-chips::-webkit-scrollbar { display: none; }
+.ml-chips .chip { display: inline-flex; align-items: center; gap: 8px; flex: 0 0 auto; min-height: 44px; padding: 0 18px; border: 1px solid var(--line); border-radius: 99px; background: var(--surface); color: var(--text); font: 600 0.92rem system-ui, sans-serif; cursor: pointer; white-space: nowrap; transition: background 0.15s, border-color 0.15s, color 0.15s; }
+.ml-chips .chip:hover { background: var(--hover); }
+.ml-chips .chip.sector[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }   /* categoría elegida: siempre la primera de la izquierda */
+.ml-chips .chip.sub { min-height: 40px; padding: 0 14px; font-weight: 500; font-size: 0.88rem; }
+.ml-chips .chip.sub .ico { color: var(--accent); }
+.ml-chips .chip.sub[aria-pressed="true"] { background: color-mix(in srgb, var(--red) 14%, var(--surface)); border-color: var(--red); color: var(--accent); }
+.chips-sep { flex: 0 0 1px; align-self: stretch; margin: 8px 4px; background: var(--line); }
+
+/* Flechas: solo con puntero fino (mouse). En el celular se desliza con el dedo. */
+.cat-nav-btn { position: absolute; top: 50%; z-index: 10; width: 40px; height: 40px; display: none; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--text); box-shadow: var(--shadow); cursor: pointer; transform: translateY(-50%); transition: background 0.15s, opacity 0.2s; }
+.cat-nav-btn:hover { background: var(--red); border-color: var(--red); color: var(--on-red); }
+.cat-nav-btn[hidden] { display: none !important; }
+.cat-prev, .chips-prev { left: -16px; }
+.cat-next, .chips-next { right: -16px; }
+@media (hover: hover) and (pointer: fine) and (min-width: 700px) { .cat-nav-btn { display: grid; } }
+
+/* ---------- Tarjetas de producto fluidas ---------- */
+.ecommerce-carousel-wrapper { position: relative; display: flex; align-items: center; margin-bottom: 16px; }
+.ecommerce-grid { display: flex; gap: 14px; width: 100%; padding: 8px 2px 18px; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; scroll-behavior: smooth; }
+.ecommerce-grid::-webkit-scrollbar { display: none; }
+.ecommerce-grid .card { flex: 0 0 clamp(210px, 68vw, 280px); scroll-snap-align: start; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; }
+.ecommerce-grid .card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: color-mix(in srgb, var(--text) 26%, transparent); }
+.ecommerce-grid .card .price, .ecommerce-grid .card b.price { color: var(--accent); }
+
+/* ---------- Propuesta de valor ---------- */
+.value-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px; }
+.value-card { display: grid; align-content: start; gap: 10px; padding: 22px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); transition: transform 0.2s, box-shadow 0.2s; }
+.value-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.value-card h3 { font-size: 1.1rem; }
+.value-card p { margin: 0; color: var(--muted); max-width: none; }
+.icon-tile { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 12px; background: color-mix(in srgb, var(--red) 12%, var(--surface)); color: var(--accent); }
+
+/* ---------- Proceso: vertical en celular, horizontal con línea en escritorio ---------- */
+.process-steps { list-style: none; display: grid; gap: 14px; margin: 0; padding: 0; counter-reset: step; }
+.process-step { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); counter-increment: step; }
+.process-step .step-num { grid-row: span 3; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--red); color: var(--on-red); font: 800 0.95rem ui-monospace, Menlo, Consolas, monospace; }
+.process-step .step-num::before { content: counter(step, decimal-leading-zero); }
+.process-step h3 { font-size: 1.05rem; align-self: center; }
+.process-step p { margin: 0; color: var(--muted); max-width: none; }
+.process-step .icon-tile { width: 36px; height: 36px; border-radius: 10px; grid-column: 2; justify-self: start; }
+@media (min-width: 640px) { .process-steps { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) {
+  .process-steps { grid-template-columns: repeat(4, 1fr); }
+  .process-step { grid-template-columns: 1fr; align-content: start; padding-top: 28px; }
+  .process-step .step-num { grid-row: auto; position: absolute; top: -22px; left: 18px; }
+  .process-step:not(:last-child)::after { content: ""; position: absolute; top: -1px; left: calc(18px + 44px); right: -14px; height: 2px; background: repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 12px); z-index: 0; }
+  .process-steps { margin-top: 30px; }
+}
+
+footer { padding-bottom: 104px; } /* aire para que los botones flotantes no tapen el texto del pie */

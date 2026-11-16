@@ -103,3 +103,13 @@ const CH = { 'Mercado Libre': ['ch-ml', 'ML'], Amazon: ['ch-amz', 'AMZ'], 'Faceb
 export const channelClass = c => (CH[c] || ['ch-own'])[0];
 /** Insignia de canal: color + sigla. Es lo que distingue de un vistazo tienda propia vs marketplace. */
 export const channelBadge = c => el('span', { class: `adm-ch ${channelClass(c)}` }, el('b', {}, (CH[c] || [, '•'])[1]), c);
+
+/**
+ * Tabla responsiva: copia el texto de cada <th> a un atributo data-label en las celdas de su columna.
+ * En celular el CSS oculta el <thead> y pinta cada fila como una TARJETA usando ese atributo (td::before { content: attr(data-label) }).
+ */
+export function mobileTable(table) {
+  const heads = [...table.querySelectorAll('thead th')].map(th => th.textContent.trim());
+  table.querySelectorAll('tbody tr').forEach(tr => [...tr.children].forEach((td, i) => td.setAttribute('data-label', heads[i] || '')));
+  return table;
+}

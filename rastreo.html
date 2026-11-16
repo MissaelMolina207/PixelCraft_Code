@@ -6,26 +6,57 @@
     <title>Rastrea tu pedido — PixelCraft</title>
     <meta name="description" content="Consulta en qué etapa va tu pedido de PixelCraft con tu folio.">
     <meta name="robots" content="noindex">
+    <meta name="color-scheme" content="light dark">
+    <script>try{var t=localStorage.getItem('pc-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
     <link rel="stylesheet" href="css/tokens.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/track.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
-    <header>
-        <div class="wrap">
-            <a class="logo" href="index.html">PIXEL <b>CRAFT</b></a>
-            <nav>
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+    <header class="site-header" id="siteHeader">
+        <div class="hdr-top lite wrap">
+            <a class="logo" href="index.html" aria-label="PixelCraft, ir a la tienda">PIXEL <b>CRAFT</b></a>
+            <div class="hdr-tools">
+                <button class="icon-btn" type="button" data-theme-cycle aria-label="Cambiar tema"></button>
+                <a class="btn hdr-back" href="index.html">Volver a la tienda</a>
+                <button class="icon-btn burger" id="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="drawer"><i data-icon="menu"></i></button>
+            </div>
+        </div>
+        <nav class="hdr-nav" aria-label="Principal">
+            <div class="wrap">
                 <a href="index.html#catalogo">Catálogo</a>
                 <a href="index.html#estudio">Estudio IA</a>
+                <a href="index.html#proceso">Proceso</a>
                 <a href="rastreo.html" aria-current="page">Rastreo</a>
-            </nav>
-            <a class="btn" href="index.html">Volver a la tienda</a>
-        </div>
+                <a href="index.html#contacto">Contacto</a>
+                <a href="index.html#ayuda">Ayuda</a>
+            </div>
+        </nav>
     </header>
+    <div class="scrim" id="drawerScrim" hidden></div>
+    <aside class="drawer" id="drawer" aria-label="Menú principal" inert>
+        <div class="drawer-head"><span class="logo">PIXEL <b>CRAFT</b></span><button class="icon-btn" id="drawerClose" type="button" aria-label="Cerrar menú"><i data-icon="close"></i></button></div>
+        <nav class="drawer-nav" aria-label="Menú">
+            <a href="index.html#catalogo"><i data-icon="tag"></i>Catálogo<i data-icon="chevron-r" data-size="18"></i></a>
+            <a href="index.html#estudio"><i data-icon="sparkle"></i>Estudio IA<i data-icon="chevron-r" data-size="18"></i></a>
+            <a href="index.html#proceso"><i data-icon="layers"></i>Proceso<i data-icon="chevron-r" data-size="18"></i></a>
+            <a href="rastreo.html"><i data-icon="truck"></i>Rastreo de pedidos<i data-icon="chevron-r" data-size="18"></i></a>
+            <a href="index.html#contacto"><i data-icon="chat"></i>Contacto<i data-icon="chevron-r" data-size="18"></i></a>
+            <a href="index.html#ayuda"><i data-icon="shield"></i>Ayuda<i data-icon="chevron-r" data-size="18"></i></a>
+        </nav>
+        <div class="drawer-sec drawer-cta"><span class="drawer-lbl" id="themeLbl">Apariencia</span>
+            <div class="seg" role="radiogroup" aria-labelledby="themeLbl">
+                <button type="button" role="radio" data-theme-set="system"><i data-icon="monitor" data-size="18"></i>Sistema</button>
+                <button type="button" role="radio" data-theme-set="light"><i data-icon="sun" data-size="18"></i>Claro</button>
+                <button type="button" role="radio" data-theme-set="dark"><i data-icon="moon" data-size="18"></i>Oscuro</button>
+            </div></div>
+    </aside>
 
-    <main class="track-page">
+    <main class="track-page" id="main">
         <div class="wrap">
             <h1>Rastrea tu pedido</h1>
             <p class="track-lead">Escribe tu folio y los últimos 4 dígitos del teléfono con el que cotizaste. Sin cuentas, sin contraseñas.</p>

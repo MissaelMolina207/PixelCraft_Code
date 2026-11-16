@@ -1,0 +1,142 @@
+/* css/float.css — Botón de WhatsApp, burbuja flotante del Estudio IA (arrastrable) y su panel de chat.
+ *
+ * Piezas:
+ *   .wa-fab        botón fijo de WhatsApp, esquina inferior derecha.
+ *   .studio-bubble esfera del Estudio IA. Por defecto vive justo ENCIMA del botón de WhatsApp, pero se puede arrastrar.
+ *                  Su posición la pone js/float.js con las variables --bx / --by (propiedad `translate`).
+ *   .bubble-tip    globo de diálogo con tips, promos y chistes.
+ *   .studio-panel  el chat (modal estilo Messenger). En celular ocupa toda la pantalla.
+ * Animaciones con las propiedades individuales `rotate` / `scale` / `translate`: no se pisan entre sí.
+ */
+:root { --wa: #0f8a4f; --fab: 56px; --bubble: 60px; }
+
+.fab-layer { position: fixed; inset: 0; z-index: 60; pointer-events: none; }   /* capa transparente: no bloquea la página */
+
+/* ---------- WhatsApp ---------- */
+.wa-fab {
+  position: fixed;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 61;
+  width: var(--fab);
+  height: var(--fab);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--wa);
+  color: #fff;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s;
+}
+.wa-fab:hover { transform: scale(1.06); }
+
+/* ---------- Burbuja ---------- */
+.studio-bubble {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--bubble);
+  height: var(--bubble);
+  translate: var(--bx, 0px) var(--by, 0px);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 2px solid color-mix(in srgb, var(--text) 18%, transparent);
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%, var(--red-hot), var(--red) 55%, var(--red-dark));
+  color: var(--on-red);
+  box-shadow: var(--shadow);
+  cursor: grab;
+  pointer-events: auto;
+  touch-action: none;           /* clave: sin esto el navegador interpreta el arrastre como scroll y cancela el gesto */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.studio-bubble.dragging { cursor: grabbing; scale: 1.08; transition: none; }
+.studio-bubble.snap { transition: translate 0.28s cubic-bezier(0.2, 0.8, 0.2, 1); }   /* se "pega" al borde al soltar */
+.studio-bubble:focus-visible { outline: 3px solid var(--text); outline-offset: 3px; }
+.bubble-logo { display: grid; place-items: center; width: 100%; height: 100%; border-radius: 50%; overflow: hidden; }
+.bubble-logo img { width: 100%; height: 100%; object-fit: cover; }
+.bubble-dot { position: absolute; top: 2px; right: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--on-red); border: 3px solid var(--red-hot); }
+
+/* Aviso periódico: un pequeño "toc-toc" y un anillo que se expande */
+.studio-bubble.nudge { animation: bubble-nudge 0.9s ease-in-out; }
+.studio-bubble.nudge::after { content: ""; position: absolute; inset: -2px; border-radius: 50%; border: 2px solid var(--red-hot); animation: bubble-ring 0.9s ease-out; }
+@keyframes bubble-nudge { 0%, 100% { rotate: 0deg; } 15% { rotate: -14deg; } 30% { rotate: 12deg; } 45% { rotate: -9deg; } 60% { rotate: 6deg; } 75% { rotate: -3deg; } }
+@keyframes bubble-ring { from { scale: 1; opacity: 0.8; } to { scale: 1.6; opacity: 0; } }
+
+/* ---------- Globo de diálogo ---------- */
+.bubble-tip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: min(264px, calc(100vw - 32px));
+  translate: var(--tx, 0px) var(--ty, 0px);
+  padding: 14px 16px 10px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  pointer-events: auto;
+  animation: tip-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.bubble-tip[hidden] { display: none; }
+.bubble-tip p { margin: 0 14px 8px 0; max-width: none; font-size: 0.92rem; line-height: 1.4; }
+.bubble-tip::after {                      /* colita del globo; js/float.js decide hacia dónde apunta */
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: inherit;
+  border: inherit;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  rotate: 45deg;
+}
+.bubble-tip[data-side="left"]::after   { right: -7px; top: calc(50% - 6px); }
+.bubble-tip[data-side="right"]::after  { left: -7px; top: calc(50% - 6px); rotate: 225deg; }
+.bubble-tip[data-side="top"]::after    { bottom: -7px; left: var(--ax, 24px); rotate: 45deg; }
+.bubble-tip[data-side="bottom"]::after { top: -7px; left: var(--ax, 24px); rotate: 225deg; }
+.bubble-tip-x { position: absolute; top: 6px; right: 6px; width: 28px; height: 28px; display: grid; place-items: center; border: 0; border-radius: 8px; background: transparent; color: var(--muted); cursor: pointer; }
+.bubble-tip-x:hover { background: var(--hover); color: var(--text); }
+.bubble-tip-actions { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.bubble-tip-actions button { padding: 4px 0; border: 0; background: none; font: 600 0.8rem system-ui, sans-serif; color: var(--accent); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.bubble-tip-actions button:last-child { color: var(--muted); font-weight: 500; }
+@keyframes tip-in { from { opacity: 0; scale: 0.85; } to { opacity: 1; scale: 1; } }
+
+/* ---------- Panel del chat ---------- */
+.studio-scrim { z-index: 98; }
+.studio-panel {
+  position: fixed;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 100;
+  width: min(410px, calc(100vw - 32px));
+  height: min(660px, calc(100dvh - 32px));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  transform-origin: var(--ox, 100%) var(--oy, 100%);   /* nace desde donde está la burbuja */
+  opacity: 0;
+  scale: 0.8;
+  translate: 0 14px;
+  transition: opacity 0.22s ease, scale 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), translate 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.studio-panel[hidden] { display: none; }
+.studio-panel.open { opacity: 1; scale: 1; translate: 0 0; }
+.studio-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 8px 8px 16px; border-bottom: 1px solid var(--line); background: var(--bg-2); }
+.studio-title { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.studio-title small { color: var(--muted); white-space: nowrap; }
+body.studio-open .fab-layer, body.studio-open .wa-fab { visibility: hidden; }
+
+/* En celular el chat es una hoja a pantalla completa (como Messenger) */
+@media (max-width: 640px) {
+  .studio-panel { inset: 0; width: auto; height: auto; border: 0; border-radius: 0; padding-top: env(safe-area-inset-top, 0px); }
+  .studio-panel-head { padding-top: 6px; }
+}
